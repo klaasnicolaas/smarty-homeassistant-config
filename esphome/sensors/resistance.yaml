@@ -1,0 +1,10 @@
+---
+# Resistance Sensor
+#
+# https://esphome.io/components/sensor/resistance.html
+#
+platform: resistance
+id: temp_resistance_reading
+sensor: temp_analog_reading
+configuration: DOWNSTREAM
+resistor: 32kOhm

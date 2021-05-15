@@ -1,0 +1,36 @@
+---
+# ADE7953 Power Sensor
+#
+# https://esphome.io/components/sensor/ade7953.html
+#
+platform: ade7953
+irq_pin: ${irq_pin}
+update_interval: 5s
+
+# Voltage sensor
+voltage:
+  name: "${name} - Voltage"
+
+# Current sensor
+current_a:
+  name: "${channel_2} - Current"
+  internal: true
+current_b:
+  name: "${channel_1} - Current"
+  internal: true
+
+# Power sensor
+active_power_a:
+  name: "${channel_1} - Power"
+  id: power_channel_1
+  filters:
+    - multiply: 1
+    # - offset: -300
+    - lambda: if (x < 1) return 0; else return (x);
+active_power_b:
+  name: "${channel_2} - Power"
+  id: power_channel_2
+  filters:
+    - multiply: -1
+    # - offset: -35
+    - lambda: if (x < 1) return 0; else return (x);

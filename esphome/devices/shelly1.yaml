@@ -1,0 +1,34 @@
+---
+# Device Shelly 1
+#
+# Conrol relay
+#
+substitutions:
+  relay_pin: GPIO4
+  input_pin: GPIO5
+
+packages:
+  <<: !include_dir_named ../common
+  board: !include ../boards/esp01_1m.yaml
+
+output:
+  - platform: gpio
+    pin: ${relay_pin}
+    id: device_relay
+
+light:
+  - platform: binary
+    name: ${name}
+    output: device_relay
+    id: device_light
+
+binary_sensor:
+  - <<: !include ../binary_sensors/status.yaml
+  - platform: gpio
+    internal: true
+    id: device_switch
+    pin:
+      number: ${input_pin}
+    name: "${name} - Button"
+    on_state:
+      - light.toggle: device_light

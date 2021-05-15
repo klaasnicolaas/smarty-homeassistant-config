@@ -1,0 +1,86 @@
+---
+# Device: Shelly 2.5
+#
+# Control relays
+#
+substitutions:
+  i2c_sda: GPIO12
+  i2c_scl: GPIO14
+
+  irq_pin: GPIO16
+
+  # Channel 1
+  channel_1: Light 1
+  channel_1_relay_pin: GPIO15
+  channel_1_input_pin: GPIO5
+
+  # channel 2
+  channel_2: Light 2
+  channel_2_relay_pin: GPIO4
+  channel_2_input_pin: GPIO13
+
+packages:
+  <<: !include_dir_named ../common
+  board: !include ../boards/esp01_1m.yaml
+  i2c: !include ../components/i2c_esp8266.yaml
+
+sensor:
+  - <<: !include ../sensors/ade7953.yaml
+  - <<: !include ../sensors/total_daily_energy.yaml
+    power_id: power_channel_1
+    id: sensor_total_daily_energy_1
+    name: "${channel_1} - Daily Energy Usage"
+  - <<: !include ../sensors/total_daily_energy.yaml
+    power_id: power_channel_2
+    id: sensor_total_daily_energy_2
+    name: "${channel_2} - Daily Energy Usage"
+  - <<: !include ../sensors/ntc.yaml
+  - <<: !include ../sensors/resistance.yaml
+  - <<: !include ../sensors/adc.yaml
+
+output:
+  - platform: gpio
+    pin: ${channel_1_relay_pin}
+    id: device_relay_1
+  - platform: gpio
+    pin: ${channel_2_relay_pin}
+    id: device_relay_2
+
+light:
+  - platform: binary
+    name: "${channel_1}"
+    output: device_relay_1
+    id: device_light_1
+  - platform: binary
+    name: "${channel_2}"
+    output: device_relay_2
+    id: device_light_2
+
+binary_sensor:
+  - <<: !include ../binary_sensors/status.yaml
+  - platform: gpio
+    pin: ${irq_pin}
+    name: "ade7953 IRQ pin"
+    internal: true
+  # Button channel 1
+  - platform: gpio
+    internal: true
+    pin:
+      number: ${channel_1_input_pin}
+    name: "${channel_1} - Button"
+    on_state:
+      - light.toggle: device_light_1
+  # Button channel 2
+  - platform: gpio
+    internal: true
+    pin:
+      number: ${channel_2_input_pin}
+    name: "${channel_2} - Button"
+    on_state:
+      - light.toggle: device_light_2
+
+# Status LED for connection
+status_led:
+  pin:
+    number: GPIO0
+    inverted: true

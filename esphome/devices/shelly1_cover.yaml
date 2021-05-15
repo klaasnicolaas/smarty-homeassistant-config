@@ -1,0 +1,55 @@
+---
+# Device: Shelly 1
+#
+# This is my ESPHome cover template for the Shelly 1
+#
+substitutions:
+  relay_pin: GPIO4
+  sensor_pin: GPIO5
+
+packages:
+  <<: !include_dir_named ../common
+  board: !include ../boards/esp01_1m.yaml
+
+# The relay in the Shelly 1 that will deliver the pulse to
+# the garage door opener (not exposed to HA)
+switch:
+  - platform: gpio
+    pin: ${relay_pin}
+    name: "${name} - Relay"
+    id: device_relay
+    internal: true
+
+# The door contact sensor that is attached to SW on the Shelly 1
+binary_sensor:
+  - <<: !include ../binary_sensors/status.yaml
+  - platform: gpio
+    pin: ${sensor_pin}
+    name: "${name} - Status"
+    device_class: garage_door
+    id: device_contact_sensor
+    filters:
+      - invert
+
+# This creates the actual garage door in HA. The state is based
+# on the contact sensor. Opening/closing the garage door simply
+# turns the relay on/off with a 0.5s delay in between.
+cover:
+  - platform: template
+    device_class: garage
+    name: "${name}"
+    id: device_cover
+    lambda: |-
+      if (id(device_contact_sensor).state) {
+        return COVER_OPEN;
+      } else {
+        return COVER_CLOSED;
+      }
+    open_action:
+      - switch.turn_on: device_relay
+      - delay: 0.5s
+      - switch.turn_off: device_relay
+    close_action:
+      - switch.turn_on: device_relay
+      - delay: 0.5s
+      - switch.turn_off: device_relay

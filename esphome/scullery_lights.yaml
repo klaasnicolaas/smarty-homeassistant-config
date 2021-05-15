@@ -1,0 +1,15 @@
+---
+# Scullery lights
+#
+# Control the lights in the scullery.
+#
+substitutions:
+  slug: scullery_lights
+  name: Bijkeuken
+  description: "Node to control the scullery lights"
+
+  channel_1: Bijkeuken
+  channel_2: Schrobhoek
+
+packages:
+  device: !include devices/shelly25.yaml

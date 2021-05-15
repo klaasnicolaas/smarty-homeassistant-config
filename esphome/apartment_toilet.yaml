@@ -1,0 +1,12 @@
+---
+# Apartment toilet
+#
+# Control the lights in the apartment toilet.
+#
+substitutions:
+  slug: apartment_toilet
+  name: WC Appartement
+  description: "Node to control the apartment toilet light"
+
+packages:
+  device: !include devices/shelly1.yaml

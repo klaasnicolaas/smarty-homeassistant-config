@@ -1,0 +1,8 @@
+---
+# ADC Sensor
+#
+# https://esphome.io/components/sensor/adc.html
+#
+platform: adc
+id: temp_analog_reading
+pin: A0

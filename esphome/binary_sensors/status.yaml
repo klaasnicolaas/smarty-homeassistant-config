@@ -1,0 +1,7 @@
+---
+# Status Binary Sensor
+#
+# https://esphome.io/components/binary_sensor/status.html
+#
+platform: status
+name: "${name} - Device State"

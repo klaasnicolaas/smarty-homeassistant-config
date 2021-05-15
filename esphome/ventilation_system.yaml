@@ -1,0 +1,12 @@
+---
+# Scullery ventilation system
+#
+# It just sends out power data to Home Assistant.
+#
+substitutions:
+  slug: ventilation_system
+  name: Ventilatie
+  description: "This is my configuration for the ventilation system"
+
+packages:
+  device: !include devices/blitzwolf_shp2.yaml

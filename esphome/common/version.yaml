@@ -1,0 +1,5 @@
+---
+# ESPHome version component package
+#
+text_sensor:
+  - <<: !include ../text_sensors/version.yaml

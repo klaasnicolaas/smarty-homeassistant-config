@@ -1,0 +1,12 @@
+---
+# Apartment hall
+#
+# Control the lights in the apartment hall.
+#
+substitutions:
+  slug: apartment_hall
+  name: Hal Appartement
+  description: "Node to control the apartment hall light"
+
+packages:
+  device: !include devices/shelly1.yaml

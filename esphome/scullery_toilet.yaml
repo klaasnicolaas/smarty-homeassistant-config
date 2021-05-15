@@ -1,0 +1,12 @@
+---
+# Scullery toilet
+#
+# Control the lights in the scullery toilet.
+#
+substitutions:
+  slug: scullery_toilet
+  name: WC Bijkeuken
+  description: "Node to control the scullery toilet light"
+
+packages:
+  device: !include devices/shelly1.yaml

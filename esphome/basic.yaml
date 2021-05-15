@@ -1,0 +1,25 @@
+# Basic Config
+substitutions:
+  slug: basic
+
+esphome:
+  name: "${slug}"
+  build_path: "./.build/${slug}/"
+  # CHANGE THIS ALWAYS!
+  platform: ESP8266
+  board: esp01_1m
+
+wifi:
+  ssid: !secret wifi_iot_ssid
+  password: !secret wifi_iot_password
+
+captive_portal:
+
+web_server:
+  port: 80
+
+# Enable logging
+logger:
+
+ota:
+  safe_mode: true

@@ -1,0 +1,12 @@
+---
+# Server cabinet
+#
+# It just sends out power data to Home Assistant.
+#
+substitutions:
+  slug: server_cabinet
+  name: Serverkast
+  description: "This is my configuration for the server cabinet"
+
+packages:
+  device: !include devices/blitzwolf_shp2.yaml

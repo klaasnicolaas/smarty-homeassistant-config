@@ -1,0 +1,128 @@
+---
+# Device: Blitzwolf SHP2
+#
+# This is my ESPHome device template for the Blitzwolf SHP2
+#
+substitutions:
+  # Higher value gives lower watt readout
+  current_res: '0.00221'
+  # Lower value gives lower voltage readout
+  voltage_div: '924'
+  # Max Power is 3680W for 16A
+  max_power: '3680'
+  # 2020 model uses GPIO4 for CF1
+  cf1_pin: GPIO5
+  cf_pin: GPIO4
+  sel_pin: GPIO12
+  relay_pin: GPIO14
+  button_pin: GPIO3
+
+packages:
+  <<: !include_dir_named ../common
+  board: !include ../boards/esp8285.yaml
+
+esphome:
+  on_boot:
+    if:
+      condition:
+        - switch.is_on: device_relay
+      then:
+        - light.turn_on: device_led
+
+sensor:
+  #
+  # I have not extracted this sensor into the `sensors` folder.
+  # Reasoning is that these require calibration (which can differ per device)
+  # and ESPHome doesn't have a way to abtract those calibrations in a sane way.
+  #
+  # I have quite a few of these plugs, the values/calibrations are so close
+  # that I decided to have a single calibration for all Gosund plugs.
+  # I might 1Watt off... I'm ok with that.
+  #
+  - platform: hlw8012
+    sel_pin:
+      number: ${sel_pin}
+      inverted: true
+    cf_pin: ${cf_pin}
+    cf1_pin: ${cf1_pin}
+    current_resistor: ${current_res}
+    voltage_divider: ${voltage_div}
+    change_mode_every: 3
+    update_interval: 3s
+
+    # Current sensor
+    current:
+      id: device_current
+      name: "${name} - Current"
+      unit_of_measurement: "A"
+      icon: mdi:current-ac
+      accuracy_decimals: 3
+
+    # Voltage sensor
+    voltage:
+      id: device_voltage
+      name: "${name} - Voltage"
+      unit_of_measurement: "V"
+      icon: mdi:flash-circle
+      accuracy_decimals: 1
+
+    # Power sensor
+    power:
+      id: device_power
+      name: "${name} - Power"
+      unit_of_measurement: "W"
+      icon: mdi:flash-outline
+      accuracy_decimals: 0
+      on_value_range:
+        - above: ${max_power}
+          then:
+            - light.turn_off: device_led
+            - switch.turn_off: device_relay
+
+  - <<: !include ../sensors/total_daily_energy.yaml
+    power_id: device_power
+
+binary_sensor:
+  - <<: !include ../binary_sensors/status.yaml
+  # Binary sensor for the button press
+  - platform: gpio
+    id: device_button
+    name: "${name} - Button"
+    pin:
+      number: ${button_pin}
+      inverted: true
+    on_press:
+      - switch.toggle: device_relay
+
+switch:
+  # Switch to toggle the relay
+  - platform: gpio
+    id: device_relay
+    name: "${name} - Relay"
+    icon: mdi:power-socket-eu
+    restore_mode: RESTORE_DEFAULT_ON
+    pin: ${relay_pin}
+    on_turn_on:
+      - light.turn_on: device_led
+    on_turn_off:
+      - light.turn_off: device_led
+
+output:
+  - platform: esp8266_pwm
+    id: device_output_led
+    pin:
+      # Red LED
+      number: GPIO13
+      inverted: true
+
+light:
+  - platform: monochromatic
+    id: device_led
+    output: device_output_led
+
+# Status LED for connection
+status_led:
+  pin:
+    # Blue LED
+    number: GPIO1
+    inverted: true

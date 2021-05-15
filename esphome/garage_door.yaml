@@ -1,0 +1,12 @@
+---
+# Garage door
+#
+# Control the garage door.
+#
+substitutions:
+  slug: garage_door
+  name: Garagedeur
+  description: "Node to control the garage door"
+
+packages:
+  device: !include devices/shelly1_cover.yaml

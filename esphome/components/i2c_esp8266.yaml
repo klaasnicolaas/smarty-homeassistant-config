@@ -1,0 +1,14 @@
+---
+# I²C Bus
+#
+# This component sets up the I²C bus for the ESP8266.
+#
+# https://esphome.io/components/i2c.html
+#
+substitutions:
+  i2c_sda: GPIO4
+  i2c_scl: GPIO5
+
+i2c:
+  sda: ${i2c_sda}
+  scl: ${i2c_scl}
