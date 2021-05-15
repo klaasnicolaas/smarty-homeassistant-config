@@ -1,0 +1,15 @@
+{
+  "domain": "afvalinfo",
+  "name": "Afvalinfo",
+  "version": "0.8.2",
+  "documentation": "https://github.com/heyajohnny/afvalinfo",
+  "issue_tracker": "https://github.com/heyajohnny/afvalinfo/issues",
+  "dependencies": [],
+  "codeowners": [
+    "@heyajohnny"
+  ],
+  "requirements": [
+    "Babel==2.8.0",
+    "python-dateutil==2.8.1"
+  ]
+}
