@@ -1,0 +1,49 @@
+  
+---
+# https://www.home-assistant.io/integrations/input_number/
+#
+energy_supplier_low_tariff:
+  name: Stroom - dal tarief
+  initial: 0.213214
+  min: 0.000001
+  max: 2
+  step: 0.001
+  unit_of_measurement: "€/kWh"
+  icon: mdi:currency-eur
+  mode: box
+energy_supplier_normal_tariff:
+  name: Stroom - normaal tarief
+  initial: 0.213214
+  min: 0.000001
+  max: 2
+  step: 0.001
+  unit_of_measurement: "€/kWh"
+  icon: mdi:currency-eur
+  mode: box
+netmanagementcosts_energy:
+  name: Stroom - netbeheerkosten
+  initial: 0.751168
+  min: 0.000001
+  max: 2
+  step: 0.001
+  unit_of_measurement: "€/day"
+  icon: mdi:currency-eur
+  mode: box
+fixed_delivery_costs_energy:
+  name: Stroom - vaste leveringskosten
+  initial: 0.196915
+  min: 0.000001
+  max: 2
+  step: 0.001
+  unit_of_measurement: "€/day"
+  icon: mdi:currency-eur
+  mode: box
+reduction_energy_tax:
+  name: Stroom - vermindering energiebelasting
+  initial: -1.530302
+  min: -2
+  max: 2
+  step: 0.001
+  unit_of_measurement: "€/day"
+  icon: mdi:currency-eur
+  mode: box
