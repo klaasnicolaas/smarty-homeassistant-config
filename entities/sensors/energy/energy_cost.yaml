@@ -1,0 +1,134 @@
+---
+#
+#
+- platform: template
+  sensors:
+    # Day #
+    house_daily_energy_offpeak_cost:
+      friendly_name: Stroomkosten laag tarief | per dag
+      unit_of_measurement: €
+      value_template: "{{ states('sensor.house_daily_energy_offpeak')|float * states('input_number.energy_supplier_low_tariff')|float }}"
+    house_daily_energy_peak_cost:
+      friendly_name: Stroomkosten hoog tarief | per dag
+      unit_of_measurement: €
+      value_template: "{{ states('sensor.house_daily_energy_peak')|float * states('input_number.energy_supplier_normal_tariff')|float }}"
+    # Week #
+    house_weekly_energy_offpeak_cost:
+      friendly_name: Stroomkosten laag tarief | per week
+      unit_of_measurement: €
+      value_template: "{{ states('sensor.house_weekly_energy_offpeak')|float * states('input_number.energy_supplier_low_tariff')|float }}"
+    house_weekly_energy_peak_cost:
+      friendly_name: Stroomkosten hoog tarief | per week
+      unit_of_measurement: €
+      value_template: "{{ states('sensor.house_weekly_energy_peak')|float * states('input_number.energy_supplier_normal_tariff')|float }}"
+    # Month
+    house_monthly_energy_offpeak_cost:
+      friendly_name: Stroomkosten laag tarief | per maand
+      unit_of_measurement: €
+      value_template: "{{ states('sensor.house_monthly_energy_offpeak')|float * states('input_number.energy_supplier_low_tariff')|float }}"
+    house_monthly_energy_peak_cost:
+      friendly_name: Stroomkosten hoog tarief | per maand
+      unit_of_measurement: €
+      value_template: "{{ states('sensor.house_monthly_energy_peak')|float * states('input_number.energy_supplier_normal_tariff')|float }}"
+    # Total Costs #
+    house_daily_energy_cost:
+      friendly_name: Stroomkosten per dag
+      unit_of_measurement: Euro
+      icon_template: mdi:currency-eur
+      value_template: "{{ (states('sensor.house_daily_energy_offpeak_cost')|float + states('sensor.house_daily_energy_peak_cost')|float) | round(2) }}"
+    house_weekly_energy_cost:
+      friendly_name: Stroomkosten per week
+      unit_of_measurement: Euro
+      icon_template: mdi:currency-eur
+      value_template: "{{ (states('sensor.house_weekly_energy_offpeak_cost')|float + states('sensor.house_weekly_energy_peak_cost')|float) | round(2) }}"
+    house_monthly_energy_cost:
+      friendly_name: Stroomkosten per maand
+      unit_of_measurement: Euro
+      icon_template: mdi:currency-eur
+      value_template: "{{ (states('sensor.house_monthly_energy_offpeak_cost')|float + states('sensor.house_monthly_energy_peak_cost')|float) | round(2) }}"
+
+    # Total Costs
+    house_total_energy_cost_today:
+      friendly_name: Stroomkosten - Vandaag
+      unit_of_measurement: 'Euro'
+      icon_template: mdi:currency-eur
+      value_template: >-
+        {% set a = states('sensor.house_daily_energy_peak') | float %}
+        {% set b = states('sensor.house_daily_energy_offpeak') | float %}
+        {% set c = states('input_number.energy_supplier_normal_tariff') | float %}
+        {% set d = states('input_number.energy_supplier_low_tariff') | float %}
+        {% set e = states('input_number.netmanagementcosts_energy') | float %}
+        {% set f = states('input_number.fixed_delivery_costs_energy') | float %}
+        {% set g = states('input_number.reduction_energy_tax') | float %}
+        {{ max(0, (((((a * c) + (b * d)) + e) + f) + g) | round(2)) }}
+
+    house_total_energy_cost_week:
+      friendly_name: Stroomkosten - Deze week
+      unit_of_measurement: 'Euro'
+      icon_template: mdi:currency-eur
+      value_template: >-
+        {% set a = states('sensor.house_weekly_energy_peak') | float %}
+        {% set b = states('sensor.house_weekly_energy_offpeak') | float %}
+        {% set c = states('input_number.energy_supplier_normal_tariff') | float %}
+        {% set d = states('input_number.energy_supplier_low_tariff') | float %}
+        {% set e = states('input_number.netmanagementcosts_energy') | float %}
+        {% set f = states('input_number.fixed_delivery_costs_energy') | float %}
+        {% set g = states('input_number.reduction_energy_tax') | float %}
+        {{ max(0, (((((a * c) + (b * d)) + ((e * 365) / 52)) + ((f * 365) / 52)) + ((g * 365) / 52)) | round(2)) }}
+
+    house_total_energy_cost_month:
+      friendly_name: Stroomkosten - Deze maand
+      unit_of_measurement: 'Euro'
+      icon_template: mdi:currency-eur
+      value_template: >-
+        {% set a = states('sensor.house_monthly_energy_peak') | float %}
+        {% set b = states('sensor.house_monthly_energy_offpeak') | float %}
+        {% set c = states('input_number.energy_supplier_normal_tariff') | float %}
+        {% set d = states('input_number.energy_supplier_low_tariff') | float %}
+        {% set e = states('input_number.netmanagementcosts_energy') | float %}
+        {% set f = states('input_number.fixed_delivery_costs_energy') | float %}
+        {% set g = states('input_number.reduction_energy_tax') | float %}
+        {{ max(0, (((((a * c) + (b * d)) + ((e * 365) / 12)) + ((f * 365) / 12)) + ((g * 365) / 12)) | round(2)) }}
+
+    # LAST PERIODS - Total Costs #
+    house_total_energy_cost_yesterday:
+      friendly_name: Stroomkosten - Gisteren
+      unit_of_measurement: 'Euro'
+      icon_template: mdi:currency-eur
+      value_template: >-
+        {% set a = state_attr('sensor.house_daily_energy_peak','last_period') | float %}
+        {% set b = state_attr('sensor.house_daily_energy_offpeak','last_period') | float %}
+        {% set c = states('input_number.energy_supplier_normal_tariff') | float %}
+        {% set d = states('input_number.energy_supplier_low_tariff') | float %}
+        {% set e = states('input_number.netmanagementcosts_energy') | float %}
+        {% set f = states('input_number.fixed_delivery_costs_energy') | float %}
+        {% set g = states('input_number.reduction_energy_tax') | float %}
+        {{ max(0, (((((a * c) + (b * d)) + e) + f) + g) | round(2)) }}
+
+    house_total_energy_cost_last_week:
+      friendly_name: Stroomkosten - Vorige week
+      unit_of_measurement: 'Euro'
+      icon_template: mdi:currency-eur
+      value_template: >-
+        {% set a = state_attr('sensor.house_weekly_energy_peak','last_period') | float %}
+        {% set b = state_attr('sensor.house_weekly_energy_offpeak','last_period') | float %}
+        {% set c = states('input_number.energy_supplier_normal_tariff') | float %}
+        {% set d = states('input_number.energy_supplier_low_tariff') | float %}
+        {% set e = states('input_number.netmanagementcosts_energy') | float %}
+        {% set f = states('input_number.fixed_delivery_costs_energy') | float %}
+        {% set g = states('input_number.reduction_energy_tax') | float %}
+        {{ max(0, (((((a * c) + (b * d)) + ((e * 365) / 52)) + ((f * 365) / 52)) + ((g * 365) / 52)) | round(2)) }}
+
+    house_total_energy_cost_last_month:
+      friendly_name: Stroomkosten - Vorige maand
+      unit_of_measurement: 'Euro'
+      icon_template: mdi:currency-eur
+      value_template: >-
+        {% set a = state_attr('sensor.house_monthly_energy_peak','last_period') | float %}
+        {% set b = state_attr('sensor.house_monthly_energy_offpeak','last_period') | float %}
+        {% set c = states('input_number.energy_supplier_normal_tariff') | float %}
+        {% set d = states('input_number.energy_supplier_low_tariff') | float %}
+        {% set e = states('input_number.netmanagementcosts_energy') | float %}
+        {% set f = states('input_number.fixed_delivery_costs_energy') | float %}
+        {% set g = states('input_number.reduction_energy_tax') | float %}
+        {{ max(0, (((((a * c) + (b * d)) + ((e * 365) / 12)) + ((f * 365) / 12)) + ((g * 365) / 12)) | round(2)) }}

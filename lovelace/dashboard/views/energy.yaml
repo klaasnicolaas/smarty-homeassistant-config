@@ -1,0 +1,360 @@
+---
+########## Energy ###########
+title: Energie
+icon: mdi:flash-outline
+path: energy
+cards:
+  # Stack 1 #
+  - type: vertical-stack
+    cards:
+      - type: gauge
+        entity: sensor.house_daily_energy
+        name: Day consumption
+        max: 10
+      - type: entities
+        entities:
+          - sensor.power_actual_consumption
+      - type: custom:mini-graph-card
+        name: Power consumption - Current
+        icon: 'hass:flash'
+        entities:
+          - entity: sensor.power_actual_consumption
+            name: Totaal
+          - entity: sensor.house_measured_energy
+            name: Gemeten
+          - entity: sensor.house_unmeasured_energy
+            name: Ongemeten
+        color_thresholds:
+          - color: '#039be5'
+            value: 150
+          - color: '#03e54d'
+            value: 300
+          - color: '#e5be03'
+            value: 550
+          - color: '#e5039b'
+            value: 700
+        group: false
+        hour24: true
+        hours_to_show: 24
+        line_width: 4
+        points_per_hour: 1
+        smoothing: true
+        show:
+          extrema: false
+          fill: true
+          icon: true
+          labels: false
+          name: true
+          state: true
+          icon_adaptive_color: true
+
+      - type: custom:apexcharts-card
+        update_interval: 1m
+        cache: true
+        header:
+          show: true
+          title: Energy breakdown
+        chart_type: donut
+        apex_config:
+          legend:
+            show: false
+        series:
+          - entity: sensor.fridge_current_power
+            name: Koelkast
+          - entity: sensor.dryer_current_power
+            name: Droger
+          - entity: sensor.washing_machine_current_power
+            name: Wasmachine
+          - entity: sensor.ventilation_power
+            name: Ventilatie
+          - entity: sensor.serverkast_power
+            name: Serverkast
+          - entity: sensor.shelly_scullery_power
+            name: Bijkeuken
+          - entity: sensor.shelly_scrubbing_angle_power
+            name: Schrobhoek
+          - entity: sensor.shelly_office_power
+            name: Werkkamer
+          - entity: sensor.central_heating_power
+            name: Centrale verwarming
+          - entity: sensor.house_unmeasured_energy
+            name: Ongemeten
+
+  # Stack 2 #
+  - type: vertical-stack
+    cards:
+      # https://github.com/JonahKr/power-distribution-card
+      - type: custom:power-distribution-card
+        title: Power flow
+        animation: flash
+        entities:
+          - entity: sensor.power_actual_consumption
+            preset: grid
+          - entity: sensor.power_actual_consumption
+            preset: home
+            invert_arrow: true
+          - entity: sensor.fridge_current_power
+            preset: consumer
+            name: Fridge
+            icon: mdi:fridge
+            invert_arrow: true
+        center:
+          type: bars
+          content:
+            - preset: autarky
+              name: autarky
+            - preset: ratio
+              name: ratio
+
+      # Statistics
+      - type: entities
+        title: Statistics
+        show_header_toggle: false
+        entities:
+          # Today
+          - type: custom:fold-entity-row
+            open: true
+            head:
+              type: section
+              label: Vandaag
+            entities:
+              - entity: sensor.house_daily_energy
+                name: Energie - Vandaag
+              - sensor.house_total_energy_cost_today
+          # Yesterday
+          - type: custom:fold-entity-row
+            head:
+              type: section
+              label: Gisteren
+            entities:
+              - sensor.house_yesterday_energy
+              - sensor.house_total_energy_cost_yesterday
+          # This week
+          - type: custom:fold-entity-row
+            head:
+              type: section
+              label: Deze week
+            entities:
+              - entity: sensor.house_weekly_energy
+                name: Energie - Deze week
+              - sensor.house_total_energy_cost_week
+          # Last week
+          - type: custom:fold-entity-row
+            head:
+              type: section
+              label: Vorige week
+            entities:
+              - sensor.house_last_week_energy
+              - sensor.house_total_energy_cost_last_week
+          # This month
+          - type: custom:fold-entity-row
+            head:
+              type: section
+              label: Deze maand
+            entities:
+              - entity: sensor.house_monthly_energy
+                name: Energie - Deze maand
+              - sensor.house_total_energy_cost_month
+          # Last month
+          - type: custom:fold-entity-row
+            head:
+              type: section
+              label: Vorige maand
+            entities:
+              - sensor.house_last_month_energy
+              - sensor.house_total_energy_cost_last_month
+
+  # Stack 3 #
+  - type: vertical-stack
+    cards:
+      # 24 uurs verloop van energie verbruik
+      # - type: custom:apexcharts-card
+      #   graph_span: 24h
+      #   update_interval: 1min
+      #   header:
+      #     show: true
+      #     title: Consumption vs Average
+      #   series:
+      #     - entity: sensor.power_actual_consumption
+      #     - entity: sensor.power_actual_consumption
+      #       group_by:
+      #         func: avg
+
+      # Verbruik in kWh per dag
+      - type: custom:apexcharts-card
+        graph_span: 7d
+        update_interval: 5m
+        cache: true
+        header:
+          show: true
+          title: Energy consumption per day
+        span:
+          end: day
+        apex_config:
+          yaxis:
+            - show: true
+              showAlways: true
+              decimalsInFloat: 0
+              title:
+                text: kWh
+          # xaxis:
+          #   labels:
+          #     format: dd-MM
+          #     show: true
+          #     showAlways: true
+          stroke:
+            show: true
+            width: 1
+            curve: smooth
+          legend:
+            show: true
+          dataLabels:
+            enabled: true
+          chart:
+            type: area
+          fill:
+            type: gradient
+            gradient:
+              shadeIntensity: 0.1
+              opacityFrom: 0.25
+              opacityTo: 1
+              inverseColors: true
+              stops:
+                - 0
+                - 90
+                - 100
+        series:
+          - entity: sensor.house_daily_energy
+            type: column
+            float_precision: 2
+            unit: kWh
+            show:
+              datalabels: true
+            group_by:
+              func: max
+              duration: 24h
+          # - entity: sensor.house_daily_energy
+          #   type: line
+          #   group_by:
+          #     func: avg
+          #     duration: 24h
+
+      # Energie kosten per dag
+      - type: custom:apexcharts-card
+        graph_span: 7d
+        update_interval: 1min
+        span:
+          end: day
+        header:
+          show: true
+          title: Total energy cost per day
+        apex_config:
+          yaxis:
+            - show: true
+              showAlways: true
+              decimalsInFloat: 0
+              title:
+                text: Euro
+          stroke:
+            show: true
+            width: 1
+            curve: smooth
+          legend:
+            show: true
+          dataLabels:
+            enabled: true
+          chart:
+            type: area
+          fill:
+            type: gradient
+            gradient:
+              shadeIntensity: 0.1
+              opacityFrom: 0.25
+              opacityTo: 1
+              inverseColors: true
+              stops:
+                - 0
+                - 90
+                - 100
+        series:
+          - color: 'rgb(138,43,226)'
+            entity: sensor.house_total_energy_cost_today
+            type: column
+            float_precision: 2
+            unit: Euro
+            show:
+              datalabels: true
+            group_by:
+              func: max
+              duration: 24h
+
+      # Useage per devices
+      - type: custom:apexcharts-card
+        graph_span: 7d
+        cache: true
+        update_interval: 5min
+        span:
+          end: day
+        header:
+          show: true
+          title: Per device
+        stacked: true
+        apex_config:
+          stroke:
+            show: true
+            width: 1
+            curve: smooth
+          fill:
+            type: gradient
+            gradient:
+              shadeIntensity: 0.1
+              opacityFrom: 0.25
+              opacityTo: 1
+              inverseColors: true
+              stops:
+                - 0
+                - 90
+                - 100
+        series:
+          - entity: sensor.fridge_total_consumption
+            name: Koelkast
+            type: column
+            group_by:
+              func: diff
+              duration: 24h
+          - entity: sensor.dryer_total_consumption
+            name: Droger
+            type: column
+            group_by:
+              func: diff
+              duration: 24h
+          - entity: sensor.washing_machine_total_consumption
+            name: Wasmachine
+            type: column
+            group_by:
+              func: diff
+              duration: 24h
+          # - entity: sensor.ventilatie_daily_energy_usage
+          #   name: Ventilatie
+          #   type: column
+          #   group_by:
+          #     func: max
+          #     duration: 24h
+          # - entity: sensor.serverkast_daily_energy_usage
+          #   name: Serverkast
+          #   type: column
+          #   group_by:
+          #     func: max
+          #     duration: 24h
+  # Stack 4 #
+  - type: vertical-stack
+    cards:
+      - type: gauge
+        entity: sensor.house_daily_energy
+        name: Solar production
+        max: 10
+      - type: entities
+        entities:
+          - entity: sensor.power_actual_consumption
+            icon: mdi:solar-power
+            name: Solar actual production

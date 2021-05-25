@@ -1,0 +1,17 @@
+---
+# This is actually just a bootstrap for my Lovelace configuration.
+
+# It loads all resources for Lovelace dynamically from subfolders
+# inside the `lovelace/resources` directory.
+#
+# Views are actually include one by one, this to guarentee the order of
+# the tabs of the view in the UI.
+#
+title: Huis(je) Fryslan
+views:
+  - !include ./views/dashboard.yaml
+  - !include ./views/energy.yaml
+  - !include ./views/energy_devices.yaml
+  - !include ./views/all_automations.yaml
+  - !include ./views/security.yaml
+  - !include ./views/system.yaml

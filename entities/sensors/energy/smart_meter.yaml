@@ -1,0 +1,74 @@
+---
+#
+- platform: template
+  sensors:
+    house_energy_tariff:
+      friendly_name: Energie tarief
+      value_template: >-
+        {% if is_state('sensor.energy_tariff', '0002') %}
+          Hoog
+        {% else %}
+          Laag
+        {% endif %}
+
+- platform: template
+  sensors:
+    house_measured_energy:
+      friendly_name: Huis - Gemeten energie
+      device_class: power
+      unit_of_measurement: w
+      value_template: >-
+        {% set a = states('sensor.fridge_current_power') | float %}
+        {% set b = states('sensor.dryer_current_power') | float %}
+        {% set c = states('sensor.washing_machine_current_power') | float %}
+        {% set d = states('sensor.ventilation_power') | float %}
+        {% set e = states('sensor.serverkast_power') | float %}
+        {% set f = states('sensor.shelly_scullery_power') | float %}
+        {% set g = states('sensor.shelly_scrubbing_angle_power') | float %}
+        {% set h = states('sensor.shelly_office_power') | float %}
+        {% set i = states('sensor.central_heating_power') | float %}
+        {{ (a + b + c + d + e + f + g + h + i) | round(0) }}
+
+    house_unmeasured_energy:
+      friendly_name: Huis - Ongemeten energie
+      device_class: power
+      unit_of_measurement: w
+      value_template: >-
+        {% set actual = states('sensor.power_actual_consumption') | float %}
+        {% set measured = states('sensor.house_measured_energy') | float %}
+        {{ (actual - measured) | round(0) }}
+
+- platform: template
+  sensors:
+    house_daily_energy:
+      friendly_name: Energie - Vandaag
+      unit_of_measurement: kWh
+      icon_template: mdi:counter
+      value_template: "{{ (states('sensor.house_daily_energy_offpeak')|float + states('sensor.house_daily_energy_peak')|float) | round(3) }}"
+    house_weekly_energy:
+      friendly_name: Energie - Deze week
+      unit_of_measurement: kWh
+      icon_template: mdi:counter
+      value_template: "{{ (states('sensor.house_weekly_energy_offpeak')|float + states('sensor.house_weekly_energy_peak')|float) | round(3) }}"
+    house_monthly_energy:
+      friendly_name: Energie - Deze maand
+      unit_of_measurement: kWh
+      icon_template: mdi:counter
+      value_template: "{{ (states('sensor.house_monthly_energy_offpeak')|float + states('sensor.house_monthly_energy_peak')|float) | round(3) }}"
+
+    # LAST PERIODS energy
+    house_yesterday_energy:
+      friendly_name: Energie - Gisteren
+      unit_of_measurement: kWh
+      icon_template: mdi:counter
+      value_template: "{{ (state_attr('sensor.house_daily_energy_offpeak','last_period')|float + state_attr('sensor.house_daily_energy_peak','last_period')|float) | round(3) }}"
+    house_last_week_energy:
+      friendly_name: Energie - Vorige week
+      unit_of_measurement: kWh
+      icon_template: mdi:counter
+      value_template: "{{ (state_attr('sensor.house_weekly_energy_offpeak','last_period')|float + state_attr('sensor.house_weekly_energy_peak','last_period')|float) | round(3) }}"
+    house_last_month_energy:
+      friendly_name: Energie - Vorige maand
+      unit_of_measurement: kWh
+      icon_template: mdi:counter
+      value_template: "{{ (state_attr('sensor.house_monthly_energy_offpeak','last_period')|float + state_attr('sensor.house_monthly_energy_peak','last_period')|float) | round(3) }}"
