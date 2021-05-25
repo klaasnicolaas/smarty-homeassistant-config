@@ -194,7 +194,7 @@ cards:
           yaxis:
             - show: true
               showAlways: true
-              decimalsInFloat: 0
+              decimalsInFloat: 2
               title:
                 text: kWh
           # xaxis:
@@ -252,7 +252,7 @@ cards:
           yaxis:
             - show: true
               showAlways: true
-              decimalsInFloat: 0
+              decimalsInFloat: 2
               title:
                 text: Euro
           stroke:
