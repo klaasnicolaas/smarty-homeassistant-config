@@ -1,4 +1,4 @@
-## Smarty - Home Assistant config
+# Smarty - Home Assistant config
 
 This is the new repository to replace the old [Home Assistant config][old-repository] repository!
 
@@ -30,6 +30,8 @@ Below my server setup on which I run Home Assistant:
 [proxmox]: https://www.proxmox.com/en/
 [ha-os]: https://github.com/whiskerz007/proxmox_hassos_install
 
+<!-- Products -->
+[intel-nuc]: https://www.intel.com/content/www/us/en/products/boards-kits/nuc/kits/nuc7i5bnh.html
 [xiaomi_temp]: https://www.banggood.com/Original-Xiaomi-Aqara-Atmos-Version-Temperature-Humidity-Sensor-Smart-Home-Thermometer-Hygrometer-p-1148666.html
 [xiaomi_door]: https://www.banggood.com/Original-Xiaomi-Aqara-Zig_Bee-Version-Window-Door-Sensor-Smart-Home-Kit-Remote-Alarm-p-1149705.html
 [bw-shp13]: https://www.banggood.com/BlitzWolf-BW-SHP13-Zigbee-3_0-Smart-WIFI-Socket-16A-EU-Plug-Electricity-Metering-APP-Remote-Controller-Timer-Work-with-Amazon-Alexa-Google-Home-p-1679992.html
