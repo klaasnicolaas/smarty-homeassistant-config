@@ -8,5 +8,10 @@ substitutions:
   name: Serverkast
   description: "This is my configuration for the server cabinet"
 
+esphome:
+  project:
+    name: klaasnicolaas.blitzwolf_shp2
+    version: "1.0"
+
 packages:
   device: !include devices/blitzwolf_shp2.yaml

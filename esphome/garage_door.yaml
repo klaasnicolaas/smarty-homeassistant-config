@@ -8,5 +8,10 @@ substitutions:
   name: Garagedeur
   description: "Node to control the garage door"
 
+esphome:
+  project:
+    name: klaasnicolaas.shelly1_cover
+    version: "1.0"
+
 packages:
   device: !include devices/shelly1_cover.yaml

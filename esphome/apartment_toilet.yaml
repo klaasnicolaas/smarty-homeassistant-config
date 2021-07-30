@@ -8,5 +8,10 @@ substitutions:
   name: WC Appartement
   description: "Node to control the apartment toilet light"
 
+esphome:
+  project:
+    name: klaasnicolaas.shelly1
+    version: "1.0"
+
 packages:
   device: !include devices/shelly1.yaml
