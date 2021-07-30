@@ -1,25 +1,25 @@
 ---
-  # The recorder component is storing details in a database which
-  # then are handled by the history component.
-  #
-  # https://www.home-assistant.io/integrations/recorder/
-  #
-  recorder:
-    # The number of days of history to keep in the recorder database
-    purge_keep_days: 7
-    db_url: !secret mariadb_addon
-    exclude:
-      entities:
-        - sensor.time
-        - sensor.ha_uptime
-      domains:
-        - updater
-        - automation
-        - group
-        - scene
-        - script
-        - weblink
-        - calendar
-        - media_player
-        - sun
-        - camera
+# The recorder component is storing details in a database which
+# then are handled by the history component.
+#
+# https://www.home-assistant.io/integrations/recorder/
+#
+recorder:
+  # The number of days of history to keep in the recorder database
+  purge_keep_days: 7
+  db_url: !secret mariadb_addon
+  exclude:
+    entities:
+      - sensor.time
+      - sensor.ha_uptime
+    domains:
+      - updater
+      - automation
+      - group
+      - scene
+      - script
+      - weblink
+      - calendar
+      - media_player
+      - sun
+      - camera

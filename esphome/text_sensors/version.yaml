@@ -9,4 +9,4 @@
 platform: version
 id: text_sensor_version
 name: "${name} - ESPHome Version"
-hide_timestamp: True
+hide_timestamp: true

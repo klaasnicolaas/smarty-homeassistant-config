@@ -42,3 +42,4 @@ image
 ip_bans.yaml
 secrets.yaml
 security.yaml
+alarm_control_panel.yaml
