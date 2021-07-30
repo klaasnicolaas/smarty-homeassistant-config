@@ -237,11 +237,11 @@ cards:
             group_by:
               func: max
               duration: 24h
-          # - entity: sensor.house_daily_energy
-          #   type: line
-          #   group_by:
-          #     func: avg
-          #     duration: 24h
+              # - entity: sensor.house_daily_energy
+              #   type: line
+              #   group_by:
+              #     func: avg
+              #     duration: 24h
 
       # Energie kosten per dag
       - type: custom:apexcharts-card
@@ -338,18 +338,18 @@ cards:
             group_by:
               func: diff
               duration: 24h
-          # - entity: sensor.ventilatie_daily_energy_usage
-          #   name: Ventilatie
-          #   type: column
-          #   group_by:
-          #     func: max
-          #     duration: 24h
-          # - entity: sensor.serverkast_daily_energy_usage
-          #   name: Serverkast
-          #   type: column
-          #   group_by:
-          #     func: max
-          #     duration: 24h
+              # - entity: sensor.ventilatie_daily_energy_usage
+              #   name: Ventilatie
+              #   type: column
+              #   group_by:
+              #     func: max
+              #     duration: 24h
+              # - entity: sensor.serverkast_daily_energy_usage
+              #   name: Serverkast
+              #   type: column
+              #   group_by:
+              #     func: max
+              #     duration: 24h
   # Stack 4 #
   - type: vertical-stack
     cards:
