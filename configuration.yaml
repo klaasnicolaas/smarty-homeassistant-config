@@ -1,0 +1,16 @@
+---
+homeassistant:
+  # Customization #
+  customize: !include_dir_merge_named customizations/entities
+  # Packages #
+  packages: !include_dir_named integrations
+  # Whitelist #
+  allowlist_external_dirs:
+    - "/config/"
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+# Text to speech
+tts:
+  - platform: google_translate
