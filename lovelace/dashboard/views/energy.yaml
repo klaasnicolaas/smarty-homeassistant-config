@@ -8,17 +8,21 @@ cards:
   - type: vertical-stack
     cards:
       - type: gauge
-        entity: sensor.house_daily_energy
-        name: Day consumption
-        max: 10
+        entity: sensor.slimme_lezer_power_actual_consumption
+        name: House - power usage
+        max: 3000
+        severity:
+          green: 200
+          yellow: 500
+          red: 800
       - type: entities
         entities:
-          - sensor.power_actual_consumption
+          - sensor.house_daily_energy
       - type: custom:mini-graph-card
         name: Power consumption - Current
         icon: 'hass:flash'
         entities:
-          - entity: sensor.power_actual_consumption
+          - entity: sensor.slimme_lezer_power_actual_consumption
             name: Totaal
           - entity: sensor.house_measured_energy
             name: Gemeten
@@ -88,9 +92,9 @@ cards:
         title: Power flow
         animation: flash
         entities:
-          - entity: sensor.power_actual_consumption
+          - entity: sensor.slimme_lezer_power_actual_consumption
             preset: grid
-          - entity: sensor.power_actual_consumption
+          - entity: sensor.slimme_lezer_power_actual_consumption
             preset: home
             invert_arrow: true
           - entity: sensor.fridge_current_power
@@ -175,8 +179,8 @@ cards:
       #     show: true
       #     title: Consumption vs Average
       #   series:
-      #     - entity: sensor.power_actual_consumption
-      #     - entity: sensor.power_actual_consumption
+      #     - entity: sensor.slimme_lezer_power_actual_consumption
+      #     - entity: sensor.slimme_lezer_power_actual_consumption
       #       group_by:
       #         func: avg
 
@@ -355,6 +359,6 @@ cards:
         max: 10
       - type: entities
         entities:
-          - entity: sensor.power_actual_consumption
+          - entity: sensor.slimme_lezer_power_actual_consumption
             icon: mdi:solar-power
             name: Solar actual production
