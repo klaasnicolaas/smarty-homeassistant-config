@@ -1,124 +1,25 @@
 ---
-# Smart meter from IMARS to read DSMR P1 port
+# DSMR Smart Reader (Slimme lezer)
+#
+# This is a DSMR reader for the P1 port of my Dutch smart meter.
+# It is a pre-assemled device from Marcel Zuidwijk, which I can
+# highly recommend.
+#
+# https://www.zuidwijk.com
+#
+# This is my version of the configuration, which has been partly
+# contributed back to the original configuration of Marcel.
+#
 substitutions:
-  device_name: slimme_lezer
-  friendly_name: Slimme Lezer
-  device_description: "Node to read the smart meter"
+  slug: slimme_lezer
+  name: Slimme Lezer
+  description: "Node to read the smart meter"
 
-external_components:
-  - source: github://zuidwijk/dsmr
-
-esphome:
-  name: ${device_name}
-  comment: '${device_description}'
-  esp8266_restore_from_flash: true
-  platform: ESP8266
-  board: d1_mini
-  project:
-    name: zuidwijk.slimmelezer
-    version: "1.0"
-
-wifi:
-  networks:
-    - ssid: !secret wifi_iot_ssid          # Uncomment this line (remove # at beginning of line) and enter your details in secrets.yaml file!
-      password: !secret wifi_iot_password  # Uncomment this line (remove # at beginning of line) and enter your details in secrets.yaml file!
-  # Enable fallback hotspot (captive portal) in case wifi connection fails
-  ap:
-    ssid: ${device_name}
-
-captive_portal:
-
-# Enable logging
-logger:
-  #level: verbose
-  baud_rate: 0
-
-# Enable Home Assistant API
-api:
-  password: !secret esphome_api_password
-
-# Enable OTA updates
-ota:
-  safe_mode: true
-  reboot_timeout: 10min
-  num_attempts: 5
-
-# Enable Web server
-web_server:
-  port: 80
+packages:
+  <<: !include_dir_named common
+  board: !include boards/wemos_d1_mini.yaml
+  dsmr: !include components/dsmr.yaml
 
 uart:
   baud_rate: 115200
   rx_pin: D7
-
-# dsmr:
-#   update_interval: 1s
-
-sensor:
-  - platform: wifi_signal
-    name: "${friendly_name} - WiFi Signal"
-    update_interval: 60s
-
-  - platform: dsmr
-    energy_delivered_tariff1:
-      name: "Energy Consumption (Low Tariff)"
-    energy_delivered_tariff2:
-      name: "Energy Consumption (High Tariff)"
-    power_delivered:
-      name: "Power Actual Consumption"
-      accuracy_decimals: 0
-      filters:
-        - multiply: 1000
-    electricity_failures:
-      name: "Energy Failures"
-      icon: mdi:alert
-    electricity_long_failures:
-      name: "Energy Long Failures"
-      icon: mdi:alert
-    electricity_sags_l1:
-      name: "Energy Sags L1"
-    electricity_sags_l2:
-      name: "Energy Sags L2"
-    electricity_sags_l3:
-      name: "Energy Sags L3"
-    electricity_swells_l1:
-      name: "Energy Swells L1"
-    electricity_swells_l2:
-      name: "Energy Swells L2"
-    electricity_swells_l3:
-      name: "Energy Swells L3"
-    voltage_l1:
-      name: "Instant Voltage L1"
-    voltage_l2:
-      name: "Instant Voltage L2"
-    voltage_l3:
-      name: "Instant Voltage L3"
-    current_l1:
-      name: "Instant Current L1"
-    current_l2:
-      name: "Instant Current L2"
-    current_l3:
-      name: "Instant Current L3"
-    gas_delivered:
-      name: gas_delivered
-
-text_sensor:
-  - platform: dsmr
-    identification:
-      name: 'DSMR Identification'
-    p1_version:
-      name: "DSMR P1 Version"
-    electricity_tariff:
-      name: "Energy Tariff"
-
-  - platform: version
-    hide_timestamp: true
-    name: "${friendly_name} - ESPHome Version"
-
-  - platform: wifi_info
-    ip_address:
-      name: "${friendly_name} - IP Address"
-      icon: mdi:wifi
-    ssid:
-      name: "${friendly_name} - Connected SSID"
-      icon: mdi:wifi-strength-2
