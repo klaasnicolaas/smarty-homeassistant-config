@@ -14,9 +14,6 @@
 #
 # Get yours at: https://www.zuidwijk.com
 #
-external_components:
-  - source: github://zuidwijk/dsmr
-
 esphome:
   esp8266_restore_from_flash: true
   project:
@@ -31,9 +28,6 @@ sensor:
       name: "${name} - Energy Consumption (High Tariff)"
     power_delivered:
       name: "${name} - Power Actual Consumption"
-      accuracy_decimals: 0
-      filters:
-        - multiply: 1000
     electricity_failures:
       name: "${name} - Energy Failures"
       icon: mdi:alert

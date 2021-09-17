@@ -4,7 +4,7 @@
 # Control the lights in the scullery.
 #
 substitutions:
-  slug: scullery_lights
+  slug: scullery-lights
   name: Bijkeuken
   description: "Node to control the scullery lights"
 

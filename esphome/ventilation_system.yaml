@@ -4,7 +4,7 @@
 # It just sends out power data to Home Assistant.
 #
 substitutions:
-  slug: ventilation_system
+  slug: ventilation-system
   name: Ventilatie
   description: "This is my configuration for the ventilation system"
 

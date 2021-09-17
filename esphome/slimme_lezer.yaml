@@ -11,7 +11,7 @@
 # contributed back to the original configuration of Marcel.
 #
 substitutions:
-  slug: slimme_lezer
+  slug: slimme-lezer
   name: Slimme Lezer
   description: "Node to read the smart meter"
 
