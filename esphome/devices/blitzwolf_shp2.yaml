@@ -63,7 +63,6 @@ sensor:
       id: device_voltage
       name: "${name} - Voltage"
       unit_of_measurement: "V"
-      icon: mdi:flash-circle
       accuracy_decimals: 1
 
     # Power sensor
