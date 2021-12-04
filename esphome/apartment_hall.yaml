@@ -4,7 +4,7 @@
 # Control the lights in the apartment hall.
 #
 substitutions:
-  slug: apartment_hall
+  slug: apartment-hall
   name: Hal Appartement
   description: "Node to control the apartment hall light"
 

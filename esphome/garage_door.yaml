@@ -4,7 +4,7 @@
 # Control the garage door.
 #
 substitutions:
-  slug: garage_door
+  slug: garage-door
   name: Garagedeur
   description: "Node to control the garage door"
 

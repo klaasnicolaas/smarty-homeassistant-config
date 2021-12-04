@@ -4,7 +4,7 @@
 # Control the lights in the apartment toilet.
 #
 substitutions:
-  slug: apartment_toilet
+  slug: apartment-toilet
   name: WC Appartement
   description: "Node to control the apartment toilet light"
 

@@ -8,10 +8,7 @@
 platform: wifi_info
 ip_address:
   name: "${name} - IP Address"
-  icon: mdi:wifi
 ssid:
-  name: "${name} - Connected SSID"
-  icon: mdi:wifi-strength-2
+  name: "${name} - SSID"
 bssid:
-  name: "${name} - Connected BSSID"
-  icon: mdi:wifi-strength-2
+  name: "${name} - BSSID"
