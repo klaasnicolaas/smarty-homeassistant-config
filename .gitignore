@@ -21,6 +21,7 @@ www/*
 ip_bans.yaml
 known_devices.yaml
 secrets.yaml
+security.yaml
 .HA_VERSION
 
 # ESPHome ignores
