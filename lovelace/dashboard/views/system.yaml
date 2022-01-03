@@ -704,4 +704,4 @@ cards:
             - entity_id: "*_esphome_version*"
         sort:
           method: state
-          count: 10
+          count: 5

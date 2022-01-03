@@ -1,3 +1,4 @@
+---
 sensor.afvalinfo_restafval_next:
   entity_picture: /local/afvalinfo/restafval.png
 sensor.afvalinfo_gft_next:
