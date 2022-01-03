@@ -19,6 +19,7 @@ www/*
 
 # Specific file ignores
 ip_bans.yaml
+alarm_control_panel.yaml
 known_devices.yaml
 secrets.yaml
 security.yaml
