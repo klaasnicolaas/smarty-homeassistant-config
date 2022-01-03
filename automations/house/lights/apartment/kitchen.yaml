@@ -1,0 +1,15 @@
+---
+#
+#
+- alias: '[Light] - Control apartment kitchen'
+  description: >-
+    Control the kitchen lights in apartment
+
+  id: 41cee8a5-a1d3-4682-b921-dfbe3e982e60
+
+  use_blueprint:
+    path: ikea_round_remote.yaml
+    input:
+      remote: d5e5d3f37b9c713498eecff2d9d5ef94
+      light:
+        entity_id: light.apartment_kitchen
