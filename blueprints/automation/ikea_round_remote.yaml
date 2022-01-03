@@ -1,0 +1,100 @@
+---
+blueprint:
+  name: deCONZ - IKEA round (5 button) remote for lights
+  description: |
+    Control lights with an IKEA round (5 button) remote.
+
+    There are 3 different features:
+    - Turn the lamp group on or off
+    - Increase or decrease the brightness
+    - Immediately switch to the min or max brightness
+
+  domain: automation
+  input:
+    remote:
+      name: Remote
+      description: IKEA Round 5 button remote
+      selector:
+        device:
+          integration: deconz
+          manufacturer: IKEA of Sweden
+          model: TRADFRI remote control
+    light:
+      name: Light
+      description: The light(s group) you want to control
+      selector:
+        target:
+          entity:
+            domain: light
+
+mode: restart
+max_exceeded: silent
+
+trigger:
+  - platform: event
+    event_type: deconz_event
+    event_data:
+      device_id: !input remote
+
+action:
+  - variables:
+      event: '{{ trigger.event.data.event }}'
+
+  - choose:
+      # ---------------------------- TURN ON OR OFF ---------------------------- #
+      - conditions:
+          - '{{ event == 1002 }}'
+        sequence:
+          - service: light.toggle
+            target: !input light
+            data: {}
+      # ------------------- INCREASE OR DECREASE BRIGHTNESS -------------------- #
+      # High
+      - conditions:
+          - '{{ event == 2001 }}'
+        sequence:
+          - repeat:
+              until:
+                - condition: template
+                  value_template: '{{ event == 2003 }}'
+              sequence:
+                - service: light.turn_on
+                  data:
+                    brightness_step_pct: 10
+                    transition: 0.5
+                  target: !input light
+                - delay: 0.2
+      # Low
+      - conditions:
+          - '{{ event == 3001 }}'
+        sequence:
+          - repeat:
+              until:
+                - condition: template
+                  value_template: '{{ event == 3003 }}'
+              sequence:
+                - service: light.turn_on
+                  data:
+                    brightness_step_pct: -10
+                    transition: 0.5
+                  target: !input light
+                - delay: 0.2
+      # ------------------------ MAX OR MIN BRIGHTNESS ------------------------ #
+      # Lowest
+      - conditions:
+          - '{{ event == 4002 }}'
+        sequence:
+          - service: light.turn_on
+            target: !input light
+            data:
+              brightness_pct: 10
+              transition: 0.5
+      # Highest
+      - conditions:
+          - '{{ event == 5002 }}'
+        sequence:
+          - service: light.turn_on
+            target: !input light
+            data:
+              brightness_pct: 100
+              transition: 0.5
