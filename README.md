@@ -1,6 +1,10 @@
 # Smarty - Home Assistant config
 
-This is the new repository that replaces the old [Home Assistant config][old-repository] repository!
+**NOTE**
+
+This is not my first [Home Assistant][home-assistant] configuration that you can find on Github. Take also a look at these [Home Assistant configuration repositories][smarthomes].
+
+---
 
 You will probably think, what is Home Assistant!? Well Home Assistant is a open source home automation platform that puts local control and privacy first. Powered by a worldwide community of tinkerers and DIY enthusiasts. Perfect to run on a Raspberry Pi or a local server.
 
@@ -90,9 +94,10 @@ SOFTWARE.
 [homeassistantci]: https://github.com/klaasnicolaas/smarty-homeassistant-config/actions/workflows/home_assistant.yml
 [commits]: https://github.com/klaasnicolaas/smarty-homeassistant-config/commits/master
 [stars]: https://github.com/klaasnicolaas/smarty-homeassistant-config/stargazers
+[home-assistant]: https://home-assistant.io
 [paypal]: https://www.paypal.me/dexterfpv
 
-[old-repository]: https://github.com/klaasnicolaas/Smarthome-homeassistant-config
+[smarthomes]: https://github.com/klaasnicolaas?tab=repositories&q=home-assistant-config
 [proxmox]: https://www.proxmox.com/en/
 [ha-os]: https://github.com/whiskerz007/proxmox_hassos_install
 
