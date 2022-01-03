@@ -1,0 +1,82 @@
+---
+# https://github.com/heyajohnny/afvalinfo
+#
+- platform: afvalinfo
+  resources:
+    - gft
+    - papier
+    - restafval
+    - trash_type_today
+    - trash_type_tomorrow
+  location: !secret afvalinfo_city
+  postcode: !secret afvalinfo_postalcode
+  streetnumber: !secret afvalinfo_number
+  locale: 'nl'
+  timespanindays: 365
+
+- platform: template
+  sensors:
+    afvalinfo_papier_next:
+      friendly_name: Papier
+      value_template: >
+        {{ state_attr('sensor.afvalinfo_papier', 'days_until_collection_date') }}
+      attribute_templates:
+        day: >
+          {{as_timestamp(strptime(states('sensor.afvalinfo_papier'),'%d-%m-%Y'))
+            |timestamp_custom('%A')}}
+        date: >
+          {{as_timestamp(strptime(states('sensor.afvalinfo_papier'),'%d-%m-%Y'))
+            |timestamp_custom('%a %d %b')}}
+        timestamp: >
+          {{as_timestamp(strptime(states('sensor.afvalinfo_papier'),'%d-%m-%Y'))}}
+
+- platform: template
+  sensors:
+    afvalinfo_gft_next:
+      friendly_name: GFT
+      value_template: >
+        {{ state_attr('sensor.afvalinfo_gft', 'days_until_collection_date') }}
+      attribute_templates:
+        day: >
+          {{as_timestamp(strptime(states('sensor.afvalinfo_gft'),'%d-%m-%Y'))
+            |timestamp_custom('%A')}}
+        date: >
+          {{as_timestamp(strptime(states('sensor.afvalinfo_gft'),'%d-%m-%Y'))
+            |timestamp_custom('%a %d %b')}}
+        timestamp: >
+          {{as_timestamp(strptime(states('sensor.afvalinfo_gft'),'%d-%m-%Y'))}}
+
+- platform: template
+  sensors:
+    afvalinfo_restafval_next:
+      friendly_name: Restafval
+      value_template: >
+        {{ state_attr('sensor.afvalinfo_restafval', 'days_until_collection_date') }}
+      attribute_templates:
+        day: >
+          {{as_timestamp(strptime(states('sensor.afvalinfo_restafval'),'%d-%m-%Y'))
+            |timestamp_custom('%A')}}
+        date: >
+          {{as_timestamp(strptime(states('sensor.afvalinfo_restafval'),'%d-%m-%Y'))
+            |timestamp_custom('%a %d %b')}}
+        timestamp: >
+          {{as_timestamp(strptime(states('sensor.afvalinfo_restafval'),'%d-%m-%Y'))}}
+
+- platform: template
+  sensors:
+    afvalinfo_next_trash_type_and_date:
+      value_template: >
+        {% set ns = namespace(minimum=365) %}
+        {% set list = ['gft', 'kerstboom', 'papier', 'pbd', 'restafval','textiel'] %}
+        {%- for l in list %}
+        {%- set days = state_attr('sensor.afvalinfo_' ~l, 'days_until_collection_date')%}
+        {%- if days != None and days < ns.minimum %}
+        {%- set ns.minimum = days %}
+        {%- endif %}
+        {%- endfor %}
+        {%- for l in list %}
+        {%- set days = state_attr('sensor.afvalinfo_' ~l, 'days_until_collection_date')%}
+        {%- if days == ns.minimum %}
+        {{l}} · {{ states('sensor.afvalinfo_' ~l) }}
+        {%- endif %}
+        {%- endfor %}
