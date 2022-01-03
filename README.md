@@ -1,8 +1,6 @@
 # Smarty - Home Assistant config
 
-**NOTE**
-
-This is not my first [Home Assistant][home-assistant] configuration that you can find on Github. Take also a look at these [Home Assistant configuration repositories][smarthomes].
+**NOTE**: This is not my first [Home Assistant][home-assistant] configuration that you can find on Github. Take also a look at these [Home Assistant configuration repositories][smarthomes].
 
 ---
 
