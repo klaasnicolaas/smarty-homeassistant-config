@@ -1,0 +1,163 @@
+---
+########## Unifi ###########
+title: Unifi netwerk
+icon: mdi:network
+path: unifi
+cards:
+  ########## Stack 1 ##########
+  - type: vertical-stack
+    cards:
+      - type: custom:mini-graph-card
+        entities:
+          - entity: sensor.unifi_gateway_www_xput_down
+            name: Download (Mbps)
+          - entity: sensor.unifi_gateway_www_xput_up
+            name: Upload (Mbps)
+          - entity: sensor.unifi_gateway_www_speedtest_ping
+            name: Ping (ms)
+            y_axis: secondary
+        name: Speed
+        height: 50
+        line_width: 2
+        font-size: 70
+        hours_to_show: 168
+        points_per_hour: 1
+        align_state: center
+        show:
+          # extrema: true
+          fill: fade
+      - type: entities
+        title: WAN
+        entities:
+          - entity: sensor.unifi_gateway_wan
+            name: Status
+          - entity: sensor.unifi_gateway_wan_uptime
+            icon: mdi:shield-outline
+            name: Uptime
+          - entity: sensor.unifi_gateway_wan_ip
+            icon: mdi:shield-outline
+            name: IP Address
+          - entity: sensor.unifi_gateway_wan
+            name: Gateway - WAN
+            type: custom:multiple-entity-row
+            show_state: false
+            secondary_info: last-changed
+            entities:
+              - attribute: num_gw
+                name: Devices
+              - attribute: num_adopted
+                name: Adopted
+              - attribute: num_disconnected
+                name: Disconnected
+              - attribute: num_pending
+                name: Pending
+  ########## Stack 2 ##########
+  - type: vertical-stack
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: custom:mini-graph-card
+            entities:
+              - entity: sensor.unifi_gateway_lan_num_user
+                name: LAN
+            name: LAN Devices
+            height: 50
+            line_width: 2
+            font_size: 70
+            hours_to_show: 168
+            points_per_hour: 1
+            align_state: center
+            show:
+              # extrema: true
+              fill: fade
+          - type: custom:mini-graph-card
+            entities:
+              - entity: sensor.unifi_gateway_wlan_num_user
+                name: WLAN
+            name: WLAN Devices
+            height: 50
+            line_width: 2
+            font_size: 70
+            hours_to_show: 168
+            points_per_hour: 1
+            align_state: center
+            show:
+              #extrema: true
+              fill: fad
+      - type: entities
+        title: LAN
+        entities:
+          - entity: sensor.unifi_gateway_lan
+            name: Status
+          - entity: sensor.unifi_gateway_lan_num_user
+            name: Devices Connected
+            icon: mdi:lan
+          - entity: sensor.unifi_gateway_lan
+            name: Switches
+            type: custom:multiple-entity-row
+            show_state: false
+            secondary_info: last-changed
+            entities:
+              - attribute: num_sw
+                name: Devices
+              - attribute: num_adopted
+                name: Adopted
+              - attribute: num_disconnected
+                name: Disconnected
+              - attribute: num_pending
+                name: Pending
+  ########## Stack 3 ##########
+  - type: vertical-stack
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: custom:mini-graph-card
+            entities:
+              - entity: sensor.unifi_united_guest
+            name: Gasten
+            unit: devices
+            height: 50
+            line_width: 2
+            font_size: 70
+            hours_to_show: 168
+            points_per_hour: 1
+            align_state: center
+            show:
+              #extrema: true
+              fill: fade
+          - type: custom:mini-graph-card
+            entities:
+              - entity: sensor.unifi_united_wifi
+            name: Wi-Fi
+            unit: devices
+            height: 50
+            line_width: 2
+            font_size: 70
+            hours_to_show: 168
+            points_per_hour: 1
+            align_state: center
+            show:
+              # extrema: true
+              fill: fade
+      - type: entities
+        title: WLAN
+        entities:
+          - entity: sensor.unifi_gateway_wlan
+            name: Status
+          - entity: sensor.unifi_gateway_wlan_num_user
+            name: Devices Connected
+            icon: mdi:wifi
+          - entity: sensor.unifi_gateway_wlan
+            name: Access Points
+            type: custom:multiple-entity-row
+            show_state: false
+            secondary_info: last-changed
+            entities:
+              - attribute: num_ap
+                name: Devices
+              - attribute: num_adopted
+                name: Adopted
+              - attribute: num_disconnected
+                name: Disconnected
+              - attribute: num_pending
+                name: Pending
