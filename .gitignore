@@ -14,6 +14,7 @@ __pycache__
 .storage
 deps
 tts
+zigbee2mqtt
 automations/security
 www/*
 
