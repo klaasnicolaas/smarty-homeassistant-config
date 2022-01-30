@@ -10,6 +10,6 @@
   use_blueprint:
     path: philips_remote_lights.yaml
     input:
-      remote: fa04ee234e1c48a3256d718b57b13f07
+      remote: sensor.philips_remote_action
       light:
         entity_id: light.shelly_office_spots
