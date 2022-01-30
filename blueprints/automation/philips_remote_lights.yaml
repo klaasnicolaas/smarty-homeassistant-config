@@ -7,9 +7,11 @@ blueprint:
   input:
     remote:
       name: Philips Hue dimmer action sensor
-      description: 'This must be an "action" sensor provided by zigbee2mqtt. For example "sensors.living_dimmer_action"'
+      description: >
+        This must be an "action" sensor provided by zigbee2mqtt. For example "sensors.living_dimmer_action"
       selector:
         entity:
+          integration: mqtt
           domain: sensor
     light:
       name: Light
@@ -35,10 +37,11 @@ max_exceeded: silent
 trigger:
   - platform: state
     entity_id: !input remote
+    attribute: action
 
 action:
   - variables:
-      command: "{{ trigger.to_state.attributes.action }}"
+      command: "{{ trigger.to_state.state }}"
       step: !input step
       negative_step: "{{ -1 * (step | int) }}"
 

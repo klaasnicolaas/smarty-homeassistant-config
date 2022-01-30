@@ -1,5 +1,5 @@
 ---
-#
+# https://www.zigbee2mqtt.io/devices/E1524_E1810.html
 #
 - alias: '[Light] - Control apartment kitchen'
   description: >-
@@ -10,6 +10,6 @@
   use_blueprint:
     path: ikea_round_remote.yaml
     input:
-      remote: d5e5d3f37b9c713498eecff2d9d5ef94
+      remote: sensor.keuken_remote_action
       light:
-        entity_id: light.apartment_kitchen
+        entity_id: light.keuken

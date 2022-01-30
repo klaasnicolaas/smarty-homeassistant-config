@@ -1,5 +1,5 @@
 ---
-#
+# https://www.zigbee2mqtt.io/devices/324131092621.html
 #
 - alias: '[Light] - Control office'
   description: >-

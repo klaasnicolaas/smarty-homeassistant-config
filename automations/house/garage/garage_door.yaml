@@ -1,0 +1,16 @@
+---
+# Control the garage door
+# https://www.zigbee2mqtt.io/devices/WXKG07LM.html
+#
+- alias: '[Garage] - Control the garage door'
+  description: >-
+    Controle the garage door with a single button press to open or close
+
+  id: 614bd580-d631-4580-90ff-870416563f6d
+
+  use_blueprint:
+    path: garage_door_remote.yaml
+    input:
+      remote: sensor.garage_remote_action
+      cover:
+        entity_id: cover.garagedeur

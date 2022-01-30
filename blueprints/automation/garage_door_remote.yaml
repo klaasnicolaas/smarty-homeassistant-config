@@ -1,0 +1,49 @@
+---
+blueprint:
+  name: Z2M - Aqara D1 (2 way) remote for cover
+  description: |
+    Control cover with an Aqara D1 (2 way) remote.
+
+    - single press to open/close cover
+  domain: automation
+  input:
+    remote:
+      name: Aqara D1 remote action sensor
+      description: 'This must be an "action" sensor provided by zigbee2mqtt. For example "sensors.living_dimmer_action"'
+      selector:
+        entity:
+          integration: mqtt
+          domain: sensor
+    cover:
+      name: Cover
+      description: The cover to control
+      selector:
+        target:
+          entity:
+            domain: cover
+
+mode: restart
+max_exceeded: silent
+
+trigger:
+  - platform: state
+    entity_id: !input remote
+    attribute: action
+
+action:
+  - variables:
+      command: "{{ trigger.to_state.state }}"
+
+  - choose:
+      # Curtain closing
+      - conditions: "{{ command == 'left' }}"
+        sequence:
+          - service: cover.open_cover
+            target: !input 'cover'
+            data: {}
+      # Curtain open
+      - conditions: "{{ command == 'right' }}"
+        sequence:
+          - service: cover.close_cover
+            target: !input 'cover'
+            data: {}

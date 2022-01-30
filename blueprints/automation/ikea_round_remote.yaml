@@ -1,6 +1,6 @@
 ---
 blueprint:
-  name: deCONZ - IKEA round (5 button) remote for lights
+  name: Z2M - IKEA round (5 button) remote for lights
   description: |
     Control lights with an IKEA round (5 button) remote.
 
@@ -12,13 +12,13 @@ blueprint:
   domain: automation
   input:
     remote:
-      name: Remote
-      description: IKEA Round 5 button remote
+      name: IKEA 5 button remote action sensor
+      description: >
+        This must be an "action" sensor provided by zigbee2mqtt. For example "sensors.living_dimmer_action"
       selector:
-        device:
-          integration: deconz
-          manufacturer: IKEA of Sweden
-          model: TRADFRI remote control
+        entity:
+          integration: mqtt
+          domain: sensor
     light:
       name: Light
       description: The light(s group) you want to control
@@ -26,37 +26,77 @@ blueprint:
         target:
           entity:
             domain: light
+    force_brightness:
+      name: Force turn on brightness
+      description: >
+        Force the brightness to the set level below, when the "on" button on
+        the remote is pushed and lights turn on.
+      default: false
+      selector:
+        boolean:
+    brightness:
+      name: Brightness
+      description: Brightness of the light(s) when turning on
+      default: 50
+      selector:
+        number:
+          min: 0
+          max: 100
+          mode: slider
+          step: 1
+          unit_of_measurement: "%"
 
 mode: restart
 max_exceeded: silent
 
+variables:
+  force_brightness: !input force_brightness
+
 trigger:
-  - platform: event
-    event_type: deconz_event
-    event_data:
-      device_id: !input remote
+  - platform: state
+    entity_id: !input remote
+    attribute: action
 
 action:
   - variables:
-      event: '{{ trigger.event.data.event }}'
+      command: "{{ trigger.to_state.state }}"
 
   - choose:
       # ---------------------------- TURN ON OR OFF ---------------------------- #
-      - conditions:
-          - '{{ event == 1002 }}'
+      - conditions: "{{ command == 'toggle' }}"
         sequence:
-          - service: light.toggle
-            target: !input light
-            data: {}
+          - choose:
+              - conditions: "{{ force_brightness }}"
+                sequence:
+                  - service: light.toggle
+                    target: !input light
+                    data:
+                      transition: 1
+                      brightness_pct: !input brightness
+            default:
+              - service: light.toggle
+                target: !input light
+                data:
+                  transition: 0.5
       # ------------------- INCREASE OR DECREASE BRIGHTNESS -------------------- #
-      # High
-      - conditions:
-          - '{{ event == 2001 }}'
+      ##### High #####
+      # Single click
+      - conditions: "{{ command == 'brightness_up_click' }}"
+        sequence:
+          - service: light.turn_on
+            target: !input light
+            data:
+              brightness_step_pct: 10
+              transition: 0.5
+      # Click and hold
+      - conditions: "{{ command == 'brightness_up_hold' }}"
         sequence:
           - repeat:
               until:
-                - condition: template
-                  value_template: '{{ event == 2003 }}'
+                - condition: state
+                  entity_id: !input remote
+                  state: brightness_up_release
+                  attribute: action
               sequence:
                 - service: light.turn_on
                   data:
@@ -64,14 +104,24 @@ action:
                     transition: 0.5
                   target: !input light
                 - delay: 0.2
-      # Low
-      - conditions:
-          - '{{ event == 3001 }}'
+      ##### Low #####
+      # Single click
+      - conditions: "{{ command == 'brightness_down_click' }}"
+        sequence:
+          - service: light.turn_on
+            target: !input light
+            data:
+              brightness_step_pct: -10
+              transition: 0.5
+      # Click and hold
+      - conditions: "{{ command == 'brightness_down_hold' }}"
         sequence:
           - repeat:
               until:
-                - condition: template
-                  value_template: '{{ event == 3003 }}'
+                - condition: state
+                  entity_id: !input remote
+                  state: brightness_down_release
+                  attribute: action
               sequence:
                 - service: light.turn_on
                   data:
@@ -79,10 +129,9 @@ action:
                     transition: 0.5
                   target: !input light
                 - delay: 0.2
-      # ------------------------ MAX OR MIN BRIGHTNESS ------------------------ #
+      # # ------------------------ MAX OR MIN BRIGHTNESS ------------------------ #
       # Lowest
-      - conditions:
-          - '{{ event == 4002 }}'
+      - conditions: "{{ command == 'arrow_left_click' }}"
         sequence:
           - service: light.turn_on
             target: !input light
@@ -90,8 +139,7 @@ action:
               brightness_pct: 10
               transition: 0.5
       # Highest
-      - conditions:
-          - '{{ event == 5002 }}'
+      - conditions: "{{ command == 'arrow_right_click' }}"
         sequence:
           - service: light.turn_on
             target: !input light
