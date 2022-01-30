@@ -81,7 +81,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 <!-- Shields -->
-[homeassistantci-shield]: https://github.com/klaasnicolaas/smarty-homeassistant-config/actions/workflows/home_assistant.yml/badge.svg
+[homeassistantci-shield]: https://github.com/klaasnicolaas/smarty-homeassistant-config/actions/workflows/home_assistant.yaml/badge.svg
 [last-commit-shield]: https://img.shields.io/github/last-commit/klaasnicolaas/smarty-homeassistant-config.svg?color=blue&style=plasticr
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2022.svg
 [commits-shield]: https://img.shields.io/github/commit-activity/y/klaasnicolaas/smarty-homeassistant-config.svg
@@ -89,7 +89,7 @@ SOFTWARE.
 [paypal-shield]: https://img.shields.io/badge/BuyMeAFanta-Paypal-orange.svg
 
 <!-- Repository link -->
-[homeassistantci]: https://github.com/klaasnicolaas/smarty-homeassistant-config/actions/workflows/home_assistant.yml
+[homeassistantci]: https://github.com/klaasnicolaas/smarty-homeassistant-config/actions/workflows/home_assistant.yaml
 [commits]: https://github.com/klaasnicolaas/smarty-homeassistant-config/commits/master
 [stars]: https://github.com/klaasnicolaas/smarty-homeassistant-config/stargazers
 [home-assistant]: https://home-assistant.io
