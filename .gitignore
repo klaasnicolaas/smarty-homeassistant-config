@@ -37,8 +37,9 @@ esphome/.*/
 .Trash*
 
 # Ignore vendored stuff
-custom_components
+custom_components/hacs
 www/community
 
 # Specific keeps
 !.gitkeep
+!esphome/common/secrets.yaml
