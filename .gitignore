@@ -26,6 +26,9 @@ secrets.yaml
 security.yaml
 .HA_VERSION
 
+# Build-in blueprints ignores
+blueprints/*/homeassistant
+
 # ESPHome ignores
 esphome/.*/
 
@@ -33,7 +36,9 @@ esphome/.*/
 .vscode
 .Trash*
 
+# Ignore vendored stuff
+custom_components
+www/community
+
 # Specific keeps
 !.gitkeep
-!www/community
-!esphome/common/secrets.yaml
