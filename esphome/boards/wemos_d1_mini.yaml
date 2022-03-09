@@ -5,7 +5,6 @@
 #
 # https://www.wemos.cc/en/latest/d1/d1_mini.html
 #
-esphome:
-  <<: !include .esphome.yaml
-  platform: ESP8266
+esp8266:
+  restore_from_flash: true
   board: d1_mini

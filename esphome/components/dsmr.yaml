@@ -15,7 +15,6 @@
 # Get yours at: https://www.zuidwijk.com
 #
 esphome:
-  esp8266_restore_from_flash: true
   project:
     name: zuidwijk.slimmelezer
     version: "1.0"
