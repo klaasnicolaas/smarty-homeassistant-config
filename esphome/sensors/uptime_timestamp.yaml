@@ -14,7 +14,7 @@
 #
 platform: template
 id: sensor_uptime_timestamp
-name: "${name} - Uptime"
+name: "${name} Uptime"
 device_class: "timestamp"
 accuracy_decimals: 0
 update_interval: never

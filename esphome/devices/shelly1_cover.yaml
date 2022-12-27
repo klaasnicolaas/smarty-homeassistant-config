@@ -16,7 +16,7 @@ packages:
 switch:
   - platform: gpio
     pin: ${relay_pin}
-    name: "${name} - Relay"
+    name: "${name} Relay"
     id: device_relay
     internal: true
 
@@ -25,7 +25,7 @@ binary_sensor:
   - <<: !include ../binary_sensors/status.yaml
   - platform: gpio
     pin: ${sensor_pin}
-    name: "${name} - Status"
+    name: "${name} Status"
     device_class: garage_door
     id: device_contact_sensor
     filters:

@@ -8,5 +8,5 @@
 #
 platform: version
 id: text_sensor_version
-name: "${name} - ESPHome Version"
+name: "${name} ESPHome Version"
 hide_timestamp: true

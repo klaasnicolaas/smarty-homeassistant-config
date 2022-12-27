@@ -10,7 +10,7 @@
 #
 platform: template
 id: sensor_wifi_signal_percentage
-name: "${name} - Wi-Fi Signal Percentage"
+name: "${name} Wi-Fi Signal Percentage"
 icon: "mdi:wifi"
 unit_of_measurement: "%"
 update_interval: never

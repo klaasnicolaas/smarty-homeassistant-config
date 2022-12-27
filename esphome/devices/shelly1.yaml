@@ -18,7 +18,7 @@ output:
 
 light:
   - platform: binary
-    name: ${name}
+    name: ${name} Light
     output: device_relay
     id: device_light
 
@@ -29,6 +29,6 @@ binary_sensor:
     id: device_switch
     pin:
       number: ${input_pin}
-    name: "${name} - Button"
+    name: "${name} Button"
     on_state:
       - light.toggle: device_light

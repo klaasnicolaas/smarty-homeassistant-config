@@ -7,8 +7,8 @@
 #
 platform: wifi_info
 ip_address:
-  name: "${name} - IP Address"
+  name: "${name} IP Address"
 ssid:
-  name: "${name} - SSID"
+  name: "${name} SSID"
 bssid:
-  name: "${name} - BSSID"
+  name: "${name} BSSID"

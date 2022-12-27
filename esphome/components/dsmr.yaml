@@ -22,52 +22,52 @@ esphome:
 sensor:
   - platform: dsmr
     energy_delivered_tariff1:
-      name: "${name} - Energy Consumption (Low Tariff)"
+      name: "${name} Energy Consumption (Low Tariff)"
     energy_delivered_tariff2:
-      name: "${name} - Energy Consumption (High Tariff)"
+      name: "${name} Energy Consumption (High Tariff)"
     power_delivered:
-      name: "${name} - Power Actual Consumption"
+      name: "${name} Power Actual Consumption"
     electricity_failures:
-      name: "${name} - Energy Failures"
+      name: "${name} Energy Failures"
       icon: mdi:alert
     electricity_long_failures:
-      name: "${name} - Energy Long Failures"
+      name: "${name} Energy Long Failures"
       icon: mdi:alert
     electricity_sags_l1:
-      name: "${name} - Energy Sags L1"
+      name: "${name} Energy Sags L1"
     electricity_sags_l2:
-      name: "${name} - Energy Sags L2"
+      name: "${name} Energy Sags L2"
     electricity_sags_l3:
-      name: "${name} - Energy Sags L3"
+      name: "${name} Energy Sags L3"
     electricity_swells_l1:
-      name: "${name} - Energy Swells L1"
+      name: "${name} Energy Swells L1"
     electricity_swells_l2:
-      name: "${name} - Energy Swells L2"
+      name: "${name} Energy Swells L2"
     electricity_swells_l3:
-      name: "${name} - Energy Swells L3"
+      name: "${name} Energy Swells L3"
     voltage_l1:
-      name: "${name} - Instant Voltage L1"
+      name: "${name} Instant Voltage L1"
     voltage_l2:
-      name: "${name} - Instant Voltage L2"
+      name: "${name} Instant Voltage L2"
     voltage_l3:
-      name: "${name} - Instant Voltage L3"
+      name: "${name} Instant Voltage L3"
     current_l1:
-      name: "${name} - Instant Current L1"
+      name: "${name} Instant Current L1"
     current_l2:
-      name: "${name} - Instant Current L2"
+      name: "${name} Instant Current L2"
     current_l3:
-      name: "${name} - Instant Current L3"
+      name: "${name} Instant Current L3"
     gas_delivered:
-      name: "${name} - Gas Delivered"
+      name: "${name} Gas Delivered"
 
 text_sensor:
   - platform: dsmr
     identification:
       id: dsmr_identification
-      name: "${name} - DSMR Identification"
+      name: "${name} DSMR Identification"
     p1_version:
       id: dsmr_p1_version
-      name: "${name} - DSMR Version"
+      name: "${name} DSMR Version"
     electricity_tariff:
       id: dsmr_electricity_tariff
-      name: "${name} - Energy Tariff"
+      name: "${name} Energy Tariff"

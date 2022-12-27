@@ -9,4 +9,4 @@
 #
 platform: restart
 id: button_restart
-name: "${name} - Restart"
+name: "${name} Restart"

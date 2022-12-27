@@ -9,7 +9,7 @@
 #
 platform: total_daily_energy
 id: sensor_total_daily_energy
-name: "${name} - Daily Energy Usage"
+name: "${name} Daily Energy Usage"
 icon: mdi:circle-slice-3
 unit_of_measurement: "kWh"
 accuracy_decimals: 3

@@ -53,7 +53,7 @@ sensor:
     # Current sensor
     current:
       id: device_current
-      name: "${name} - Current"
+      name: "${name} Current"
       unit_of_measurement: "A"
       icon: mdi:current-ac
       accuracy_decimals: 3
@@ -61,14 +61,14 @@ sensor:
     # Voltage sensor
     voltage:
       id: device_voltage
-      name: "${name} - Voltage"
+      name: "${name} Voltage"
       unit_of_measurement: "V"
       accuracy_decimals: 1
 
     # Power sensor
     power:
       id: device_power
-      name: "${name} - Power"
+      name: "${name} Power"
       unit_of_measurement: "W"
       icon: mdi:flash-outline
       accuracy_decimals: 0
@@ -86,7 +86,7 @@ binary_sensor:
   # Binary sensor for the button press
   - platform: gpio
     id: device_button
-    name: "${name} - Button"
+    name: "${name} Button"
     pin:
       number: ${button_pin}
       inverted: true
@@ -97,7 +97,7 @@ switch:
   # Switch to toggle the relay
   - platform: gpio
     id: device_relay
-    name: "${name} - Relay"
+    name: "${name} Relay"
     icon: mdi:power-socket-eu
     restore_mode: RESTORE_DEFAULT_ON
     pin: ${relay_pin}

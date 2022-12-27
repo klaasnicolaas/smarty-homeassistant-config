@@ -11,4 +11,4 @@
 #
 platform: restart
 id: switch_restart
-name: "${name} - Restart"
+name: "${name} Restart"

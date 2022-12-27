@@ -67,7 +67,7 @@ binary_sensor:
     internal: true
     pin:
       number: ${channel_1_input_pin}
-    name: "${channel_1} - Button"
+    name: "${channel_1} Button"
     on_state:
       - light.toggle: device_light_1
   # Button channel 2
@@ -75,7 +75,7 @@ binary_sensor:
     internal: true
     pin:
       number: ${channel_2_input_pin}
-    name: "${channel_2} - Button"
+    name: "${channel_2} Button"
     on_state:
       - light.toggle: device_light_2
 

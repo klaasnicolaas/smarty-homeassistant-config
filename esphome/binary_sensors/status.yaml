@@ -4,4 +4,4 @@
 # https://esphome.io/components/binary_sensor/status.html
 #
 platform: status
-name: "${name} - Device State"
+name: "${name} Device State"
