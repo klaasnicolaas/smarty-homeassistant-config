@@ -16,7 +16,7 @@ jobs:
       - name: ⤵️ Check out configuration from GitHub
         uses: actions/checkout@v3
       - name: 🚀 Run yamllint
-        uses: frenck/action-yamllint@v1.2
+        uses: frenck/action-yamllint@v1.3
 
   #Remark Lint
   remarklint:
@@ -47,7 +47,7 @@ jobs:
         run: |
           touch ./home-assistant.log
       - name: 🚀 Run Home Assistant Configuration Check
-        uses: frenck/action-home-assistant@v1.3
+        uses: frenck/action-home-assistant@v1.4
         with:
           secrets: ./.stubs/fake_secrets.yaml
           version: "${{ matrix.version }}"
@@ -60,7 +60,7 @@ jobs:
       - name: ⤵️ Check out configuration from GitHub
         uses: actions/checkout@v3
       - name: Set up Python 3.9
-        uses: actions/setup-python@v4.2.0
+        uses: actions/setup-python@v4.4.0
         with:
           python-version: 3.9
       - name: Install dependencies
