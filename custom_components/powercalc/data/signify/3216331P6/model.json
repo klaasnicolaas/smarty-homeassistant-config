@@ -1,6 +1,6 @@
 {
     "measure_description": "Measured with utils/measure script",
-    "measure_device": "TP-Link HS110",
+    "measure_device": "TP-Link Kasa HS110",
     "measure_method": "script",
     "measure_settings": {
         "SAMPLE_COUNT": 2,
@@ -9,7 +9,5 @@
     },
     "name": "Hue White Ambiance Aurelle Rectangular",
     "standby_power": 0.35,
-    "supported_modes": [
-        "lut"
-    ]
+    "calculation_strategy": "lut"
 }
