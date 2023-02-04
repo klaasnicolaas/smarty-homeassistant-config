@@ -8,8 +8,9 @@
 # https://esphome.io/components/api.html
 #
 substitutions:
-  api_password: !secret esphome_api_password
+  encryption_key: !secret esphome_encryption_key
 
 api:
   id: component_api
-  password: "${api_password}"
+  encryption:
+    key: "${encryption_key}"
