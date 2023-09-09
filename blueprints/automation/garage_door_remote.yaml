@@ -12,8 +12,9 @@ blueprint:
       description: 'This must be an "action" sensor provided by zigbee2mqtt. For example "sensors.living_dimmer_action"'
       selector:
         entity:
-          integration: mqtt
-          domain: sensor
+          filter:
+            - integration: mqtt
+              domain: sensor
     cover:
       name: Cover
       description: The cover to control

@@ -11,8 +11,9 @@ blueprint:
         This must be an "action" sensor provided by zigbee2mqtt. For example "sensors.living_dimmer_action"
       selector:
         entity:
-          integration: mqtt
-          domain: sensor
+          filter:
+            - integration: mqtt
+              domain: sensor
     light:
       name: Light
       description: The light(s group) you want to control
@@ -31,7 +32,7 @@ blueprint:
           step: 1.0
           unit_of_measurement: "%"
 
-mode: restart
+mode: parallel
 max_exceeded: silent
 
 trigger:
