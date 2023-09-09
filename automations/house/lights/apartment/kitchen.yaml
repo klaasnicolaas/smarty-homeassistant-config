@@ -1,7 +1,7 @@
 ---
 # https://www.zigbee2mqtt.io/devices/E1524_E1810.html
 #
-- alias: '[Light] - Control apartment kitchen'
+- alias: "[Light] - Control apartment kitchen"
   description: >-
     Control the kitchen lights in apartment
 
@@ -12,4 +12,4 @@
     input:
       remote: sensor.keuken_remote_action
       light:
-        entity_id: light.keuken
+        entity_id: light.apartment_kitchen
