@@ -50,6 +50,7 @@ from .const import (
     CONF_MODE,
     CONF_MODEL,
     CONF_MULTIPLY_FACTOR,
+    CONF_MULTIPLY_FACTOR_STANDBY,
     CONF_ON_TIME,
     CONF_PLAYBOOK,
     CONF_PLAYBOOKS,
@@ -69,6 +70,7 @@ from .const import (
     DISCOVERY_POWER_PROFILE,
     DISCOVERY_SOURCE_ENTITY,
     DOMAIN,
+    DOMAIN_CONFIG,
     DUMMY_ENTITY_ID,
     ENERGY_INTEGRATION_METHOD_LEFT,
     ENERGY_INTEGRATION_METHODS,
@@ -243,6 +245,7 @@ SCHEMA_POWER_ADVANCED = vol.Schema(
         vol.Optional(CONF_IGNORE_UNAVAILABLE_STATE): selector.BooleanSelector(),
         vol.Optional(CONF_UNAVAILABLE_POWER): vol.Coerce(float),
         vol.Optional(CONF_MULTIPLY_FACTOR): vol.Coerce(float),
+        vol.Optional(CONF_MULTIPLY_FACTOR_STANDBY): selector.BooleanSelector(),
         vol.Optional(
             CONF_ENERGY_INTEGRATION_METHOD,
             default=ENERGY_INTEGRATION_METHOD_LEFT,
@@ -704,7 +707,10 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         return self.async_show_form(
             step_id="power_advanced",
-            data_schema=SCHEMA_POWER_ADVANCED,
+            data_schema=_fill_schema_defaults(
+                SCHEMA_POWER_ADVANCED,
+                _get_global_powercalc_config(self.hass),
+            ),
             errors={},
         )
 
@@ -966,9 +972,15 @@ def _create_virtual_power_schema(
                 ): STRATEGY_SELECTOR,
             },
         )
-        return schema.extend(SCHEMA_POWER_OPTIONS.schema)  # type: ignore
+        options_schema = SCHEMA_POWER_OPTIONS
+    else:
+        options_schema = SCHEMA_POWER_OPTIONS_LIBRARY
 
-    return schema.extend(SCHEMA_POWER_OPTIONS_LIBRARY.schema)  # type: ignore
+    power_options = _fill_schema_defaults(
+        options_schema,
+        _get_global_powercalc_config(hass),
+    )
+    return schema.extend(power_options.schema)  # type: ignore
 
 
 def _create_group_options_schema(
@@ -1210,3 +1222,8 @@ def _fill_schema_defaults(
                 new_key.description = {"suggested_value": options.get(key)}  # type: ignore
         schema[new_key] = val
     return vol.Schema(schema)
+
+
+def _get_global_powercalc_config(hass: HomeAssistant) -> dict[str, str]:
+    powercalc = hass.data.get(DOMAIN) or {}
+    return powercalc.get(DOMAIN_CONFIG) or {}
