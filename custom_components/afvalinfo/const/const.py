@@ -2,7 +2,12 @@ import logging
 from datetime import timedelta
 
 SENSOR_TYPES = {
+    "cleanprofsgft": ["CleanprofsGft", "mdi:recycle"],
+    "cleanprofspbd": ["CleanprofsPbd", "mdi:recycle"],
+    "cleanprofsrestafval": ["CleanprofsRestafval", "mdi:recycle"],
     "gft": ["GFT", "mdi:recycle"],
+    "grofvuil": ["Grofvuil", "mdi:recycle"],
+    "kca": ["KCA", "mdi:recycle"],
     "kerstboom": ["Kerstboom", "mdi:recycle"],
     "papier": ["Papier", "mdi:recycle"],
     "pbd": ["PBD", "mdi:recycle"],
@@ -15,7 +20,7 @@ SENSOR_TYPES = {
 
 SENSOR_LOCATIONS_TO_URL = {
     "trashapi": [
-        "http://trashapi.azurewebsites.net/trash?Location={0}&ZipCode={1}&HouseNumber={2}&HouseNumberSuffix={3}&District={4}&DiftarCode={5}&ShowWholeYear={6}"
+        "http://trashapi.azurewebsites.net/trash?Location={0}&ZipCode={1}&HouseNumber={2}&HouseNumberSuffix={3}&District={4}&DiftarCode={5}&ShowWholeYear={6}&GetCleanprofsData={7}"
     ]
 }
 
@@ -77,7 +82,6 @@ CONF_DIFTAR_CODE = "diftarcode"
 SENSOR_PREFIX = "Afvalinfo "
 ATTR_ERROR = "error"
 ATTR_LAST_UPDATE = "last_update"
-ATTR_HIDDEN = "hidden"
 ATTR_IS_COLLECTION_DATE_TODAY = "is_collection_date_today"
 ATTR_DAYS_UNTIL_COLLECTION_DATE = "days_until_collection_date"
 ATTR_YEAR_MONTH_DAY_DATE = "year_month_day_date"

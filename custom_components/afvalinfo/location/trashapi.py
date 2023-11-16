@@ -1,5 +1,4 @@
 from ..const.const import (
-    MONTH_TO_NUMBER,
     SENSOR_LOCATIONS_TO_URL,
     _LOGGER,
 )
@@ -7,10 +6,11 @@ from datetime import date, datetime, timedelta
 import urllib.request
 import urllib.error
 import requests
+import asyncio
 
 
 class TrashApiAfval(object):
-    def get_data(
+    async def get_data(
         self,
         location,
         postcode,
@@ -20,6 +20,7 @@ class TrashApiAfval(object):
         diftar_code,
         get_whole_year,
         resources,
+        get_cleanprofs_data,
     ):
         _LOGGER.debug("Updating Waste collection dates")
 
@@ -32,9 +33,14 @@ class TrashApiAfval(object):
                 district,
                 diftar_code,
                 get_whole_year,
+                get_cleanprofs_data,
             )
 
-            r = requests.get(url=API_ENDPOINT)
+            loop = asyncio.get_event_loop()
+            future = loop.run_in_executor(None, requests.get, API_ENDPOINT)
+            r = await future
+
+            # r = await requests.get(url=API_ENDPOINT, timeout=10)
             dataList = r.json()
 
             # Place all possible values in the dictionary even if they are not necessary
@@ -43,10 +49,22 @@ class TrashApiAfval(object):
             # _LOGGER.warning(dataList)
 
             for data in dataList:
-
-                # find gft, kerstboom, papier, pbd, takken or textiel
                 if (
-                    ("gft" in resources and data["name"].lower() == "gft")
+                    (
+                        "cleanprofsgft" in resources
+                        and data["name"].lower() == "cleanprofsgft"
+                    )
+                    or (
+                        "cleanprofspbd" in resources
+                        and data["name"].lower() == "cleanprofspbd"
+                    )
+                    or (
+                        "cleanprofsrestafval" in resources
+                        and data["name"].lower() == "cleanprofsrestafval"
+                    )
+                    or ("gft" in resources and data["name"].lower() == "gft")
+                    or ("grofvuil" in resources and data["name"].lower() == "grofvuil")
+                    or ("kca" in resources and data["name"].lower() == "kca")
                     or (
                         "kerstboom" in resources and data["name"].lower() == "kerstboom"
                     )
@@ -58,7 +76,7 @@ class TrashApiAfval(object):
                     waste_array.append(
                         {data["name"].lower(): data["date"].split("T")[0]}
                     )
-                # find restafval.
+                # find restafval and diftar.
                 if "restafval" in resources and data["name"].lower() == "restafval":
                     if (
                         date.today()
