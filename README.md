@@ -39,13 +39,13 @@ Below my server setup on which I run Home Assistant:
 - [Blitzwolf BW-SHP2][bw_shp2-shop] smart plugs (ESPHome flashed)
 - [Fibaro Wall Plug][fibaro_wall-shop] (Z-Wave)
 - [Fibaro Smoke Sensor][fibaro_smoke-shop] (Z-Wave)
-- [Shelly 1][shelly_1] (ESPHome flashed)
-- [Shelly Dimmer 2][shelly_dimmer_2] (WiFi)
-- [Shelly 2.5][shelly_25] (ESPHome flashed)
+- Shelly 1 (ESPHome flashed)
+- [Shelly Dimmer 2][shelly_dimmer_2] (Wi-Fi)
+- [Shelly 2PM][shelly_2pm] (Wi-Fi)
 
 ## Need help or questions? 🤔
 
-If you have a specific question about my configuration send me a Private message (PM) on the HA forum, my username is **[klaasnicolaas](https://community.home-assistant.io/u/klaasnicolaas)**. Or send me a message via Discord, my username is **Doc Master Nicolaz**. If you have found any bug or errors, please submit an issue here on Github and I will get it fixed.
+If you have a specific question about my configuration send me a Private message (PM) on the HA forum, my username is **[klaasnicolaas](https://community.home-assistant.io/u/klaasnicolaas)**. Or send me a message via Discord, my username is **Mister Nicolaz**. If you have found any bug or errors, please submit an issue here on Github and I will get it fixed.
 
 ## Links
 
@@ -109,6 +109,5 @@ SOFTWARE.
 [bw_shp2-shop]: https://www.banggood.com/bang/?tt=16956_12_417111_&r=%2FBlitzWolf-BW-SHP2-16A-Smart-WIFI-Socket-220V-EU-Plug-Work-with-Amazon-Alexa-Google-Assistant-Compatible-with-BlitzWolf-Tuya-APP-p-1292899.html
 [fibaro_wall-shop]: https://partner.bol.com/click/click?p=2&t=url&s=1208424&f=TXL&url=https%3A%2F%2Fwww.bol.com%2Fnl%2Fnl%2Fp%2Ffibaro-wall-plug-type-f-slimme-stekker-incl-energiemeter-werkt-met-toon-fibaro-home-center-en-homey%2F9200000072900555%2F&name=FIBARO%20Wall%20Plug%20-%20Type%20F%20(NL)
 [fibaro_smoke-shop]: https://partner.bol.com/click/click?p=2&t=url&s=1208424&f=TXL&url=https%3A%2F%2Fwww.bol.com%2Fnl%2Fnl%2Fp%2Ffibaro-smoke-sensor-draadloze-rookmelder-werkt-met-fibaro-toon-en-homey-z-wave-plus%2F9200000045628365%2F&name=FIBARO%20Smoke%20Sensor%20-%20Draadloze%20rookmelder
-[shelly_1]: https://shelly.cloud/products/shelly-1-smart-home-automation-relay/
-[shelly_dimmer_2]: https://shelly.cloud/products/shelly-dimmer-2-smart-home-light-controller/
-[shelly_25]: https://shelly.cloud/products/shelly-25-smart-home-automation-relay/
+[shelly_dimmer_2]: https://www.shelly.com/en/products/shop/shelly-dimmer2
+[shelly_2pm]: https://www.shelly.com/en/products/shop/shelly-plus-2-pm
