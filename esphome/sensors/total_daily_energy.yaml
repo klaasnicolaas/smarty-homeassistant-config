@@ -10,9 +10,10 @@
 platform: total_daily_energy
 id: sensor_total_daily_energy
 name: "${name} Daily Energy Usage"
-icon: mdi:circle-slice-3
+device_class: energy
+state_class: total_increasing
+entity_category: diagnostic
 unit_of_measurement: "kWh"
-accuracy_decimals: 3
 filters:
   # Multiplication factor from W to kW is 0.001
   - multiply: 0.001

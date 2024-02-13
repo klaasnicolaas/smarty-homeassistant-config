@@ -5,3 +5,4 @@
 #
 platform: status
 name: "${name} Device State"
+entity_category: diagnostic

@@ -9,4 +9,7 @@
 platform: wifi_signal
 id: sensor_wifi_signal
 name: "${name} Wi-Fi Signal"
+entity_category: diagnostic
+state_class: measurement
+disabled_by_default: true
 update_interval: 300s

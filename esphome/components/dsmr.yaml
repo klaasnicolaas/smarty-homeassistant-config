@@ -25,8 +25,14 @@ sensor:
       name: "${name} Energy Consumption (Low Tariff)"
     energy_delivered_tariff2:
       name: "${name} Energy Consumption (High Tariff)"
+    energy_returned_tariff1:
+      name: "${name} Energy Returned (Low Tariff)"
+    energy_returned_tariff2:
+      name: "${name} Energy Returned (High Tariff)"
     power_delivered:
       name: "${name} Power Actual Consumption"
+    power_returned:
+      name: "${name} Power Actual Returned"
     electricity_failures:
       name: "${name} Energy Failures"
       icon: mdi:alert
@@ -65,9 +71,11 @@ text_sensor:
     identification:
       id: dsmr_identification
       name: "${name} DSMR Identification"
+      entity_category: diagnostic
     p1_version:
       id: dsmr_p1_version
       name: "${name} DSMR Version"
+      entity_category: diagnostic
     electricity_tariff:
       id: dsmr_electricity_tariff
       name: "${name} Energy Tariff"
