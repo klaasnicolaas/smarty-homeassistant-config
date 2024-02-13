@@ -25,6 +25,7 @@ known_devices.yaml
 secrets.yaml
 security.yaml
 .HA_VERSION
+spook_inverse
 
 # Build-in blueprints ignores
 blueprints/*/homeassistant
