@@ -1,0 +1,137 @@
+---
+blueprint:
+  name: Z2M - IKEA styrbar (4 button) remote for lights
+  description: |
+    Control lights with an IKEA styrbar (4 button) remote.
+
+    There are 3 different features:
+    - Turn the light group on or off
+    - Increase or decrease the brightness
+    - Immediately switch to the min or max brightness
+
+  domain: automation
+  input:
+    remote:
+      name: IKEA 4 button remote action sensor
+      description: >
+        This must be an "action" sensor provided by zigbee2mqtt. For example "sensors.living_dimmer_action"
+      selector:
+        entity:
+          integration: mqtt
+          domain: sensor
+    light:
+      name: Light
+      description: The light(s group) you want to control
+      selector:
+        target:
+          entity:
+            domain: light
+    force_brightness:
+      name: Force turn on brightness
+      description: >
+        Force the brightness to the set level below, when the "on" button on
+        the remote is pushed and lights turn on.
+      default: false
+      selector:
+        boolean:
+    brightness:
+      name: Brightness
+      description: Brightness of the light(s) when turning on
+      default: 50
+      selector:
+        number:
+          min: 0
+          max: 100
+          mode: slider
+          step: 1
+          unit_of_measurement: "%"
+
+mode: restart
+max_exceeded: silent
+
+variables:
+  force_brightness: !input force_brightness
+
+trigger:
+  - platform: state
+    entity_id: !input remote
+    attribute: action
+    # Prefent double automation triggers in restart mode
+    not_to: ""
+
+action:
+  - variables:
+      command: "{{ trigger.to_state.state }}"
+  - choose:
+      # ---------------------------- TURN ON OR OFF ---------------------------- #
+      - conditions: "{{ command == 'on' }}"
+        sequence:
+          - choose:
+              - conditions: "{{ force_brightness }}"
+                sequence:
+                  - service: light.turn_on
+                    target: !input light
+                    data:
+                      transition: 1
+                      brightness_pct: !input brightness
+            default:
+              - service: light.turn_on
+                target: !input light
+                data:
+                  transition: 0.5
+      - conditions: "{{ command == 'off' }}"
+        sequence:
+          - service: light.turn_off
+            target: !input light
+            data:
+              transition: 0.5
+      # ------------------- INCREASE OR DECREASE BRIGHTNESS -------------------- #
+      # High - Click and hold
+      - conditions: "{{ command == 'brightness_move_up' }}"
+        sequence:
+          - repeat:
+              until:
+                - condition: state
+                  entity_id: !input remote
+                  state: brightness_stop
+                  attribute: action
+              sequence:
+                - service: light.turn_on
+                  data:
+                    brightness_step_pct: 10
+                    transition: 0.5
+                  target: !input light
+                - delay: 0.2
+      # Low - Click and hold
+      - conditions: "{{ command == 'brightness_move_down' }}"
+        sequence:
+          - repeat:
+              until:
+                - condition: state
+                  entity_id: !input remote
+                  state: brightness_stop
+                  attribute: action
+              sequence:
+                - service: light.turn_on
+                  data:
+                    brightness_step_pct: -10
+                    transition: 0.5
+                  target: !input light
+                - delay: 0.2
+      # # ------------------------ MAX OR MIN BRIGHTNESS ------------------------ #
+      # Lowest
+      - conditions: "{{ command == 'arrow_left_click' }}"
+        sequence:
+          - service: light.turn_on
+            target: !input light
+            data:
+              brightness_pct: 10
+              transition: 0.5
+      # Highest
+      - conditions: "{{ command == 'arrow_right_click' }}"
+        sequence:
+          - service: light.turn_on
+            target: !input light
+            data:
+              brightness_pct: 100
+              transition: 0.5
