@@ -55,7 +55,7 @@ class LutRegistry:
         cache_key = f"{power_profile.manufacturer}_{power_profile.model}_{color_mode}_{power_profile.sub_profile}"
         lookup_dict = self._lookup_dictionaries.get(cache_key)
         if lookup_dict is None:
-            defaultdict_of_dict = partial(defaultdict, dict)
+            defaultdict_of_dict = partial(defaultdict, dict)  # type: ignore[var-annotated]
             lookup_dict = defaultdict(defaultdict_of_dict)
 
             with self.get_lut_file(power_profile, color_mode) as csv_file:
@@ -134,7 +134,7 @@ class LutStrategy(PowerCalculationStrategyInterface):
                 color_mode,
             )
         except LutFileNotFoundError:
-            _LOGGER.error(
+            _LOGGER.warning(
                 "%s: Lookup table not found (model: %s, color_mode: %s)",
                 entity_state.entity_id,
                 self._profile.model,
@@ -246,7 +246,7 @@ class LutStrategy(PowerCalculationStrategyInterface):
 
         return max(
             (k for k in lookup_dict if int(k) <= int(search_key)),
-            default=[*keys][0],
+            default=next(iter(keys)),
         )
 
     @staticmethod
@@ -255,7 +255,7 @@ class LutStrategy(PowerCalculationStrategyInterface):
         search_key: int,
     ) -> int:
         keys = lookup_dict.keys()
-        first_key = [*keys][0]
+        first_key = next(iter(keys))
         if first_key > search_key:
             return int(first_key)
 
@@ -272,6 +272,8 @@ class LutStrategy(PowerCalculationStrategyInterface):
         if not color_modes:
             return
         for color_mode in filter_supported_color_modes(color_modes):
+            if color_mode in COLOR_MODES_COLOR:
+                color_mode = ColorMode.HS
             if color_mode in LUT_COLOR_MODES:
                 try:
                     await self._lut_registry.get_lookup_dictionary(

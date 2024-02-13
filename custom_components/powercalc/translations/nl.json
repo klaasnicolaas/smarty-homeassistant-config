@@ -24,7 +24,7 @@
                     "create_utility_meters": "Creëer utiliteit meters",
                     "name": "Naam",
                     "on_time": "Tijd aan per dag",
-                    "start_time": "Start time",
+                    "start_time": "Begintijd",
                     "unique_id": "Uniek id",
                     "unit_of_measurement": "Eenheid",
                     "update_frequency": "Update frequentie",
@@ -54,6 +54,7 @@
             "group": {
                 "data": {
                     "area": "Ruimte",
+                    "device": "Apparaat",
                     "create_utility_meters": "Creëer utiliteit meters",
                     "group_energy_entities": "Additionele energie entiteiten",
                     "group_member_sensors": "Individuele Powercalc sensoren",
@@ -65,6 +66,7 @@
                 },
                 "data_description": {
                     "area": "Voeg alle powercalc sensoren van de gespecificeerde ruimte toe",
+                    "device": "Voeg de entiteiten toe aan een bestaand HA apparaat",
                     "group_energy_entities": "Additionele energie entiteiten (kWh)",
                     "group_member_sensors": "Powercalc sensoren die je wil toevoegen aan de groep",
                     "group_power_entities": "Additionele vermogen entiteiten (W)",
@@ -152,8 +154,8 @@
                     "create_utility_meters": "Laat powercalc utiliteit meters maken, Deze resetten dagelijks, uurlijks etc.",
                     "name": "Basisnaam voor de gegenereerde vermogen- en utiliteitsmeter. Volledige entiteit naam zal worden ingesteld afhankelijk van de energy_sensor_naming instelling"
                 },
-                "description": "Currently specific settings can only be configured globally",
-                "title": "Create an energy sensor for an existing power sensor"
+                "description": "Momenteel kunnen specifieke instellingen alleen globaal worden geconfigureerd",
+                "title": "Maak een energiesensor voor een bestaande stroomsensor"
             },
             "sub_profile": {
                 "data": {
@@ -164,7 +166,7 @@
             },
             "user": {
                 "data": {
-                    "sensor_type": "Sensor type"
+                    "sensor_type": "Type sensor"
                 },
                 "menu_options": {
                     "daily_energy": "Dagelijkse energie",
@@ -199,8 +201,8 @@
             },
             "wled": {
                 "data": {
-                    "power_factor": "Power factor",
-                    "voltage": "Voltage"
+                    "power_factor": "Vermogensfactor",
+                    "voltage": "Spanning"
                 },
                 "title": "WLED configuratie"
             }
@@ -232,6 +234,7 @@
                     "calibrate": "Kalibratie waardes",
                     "create_energy_sensor": "Creëer energie sensoren",
                     "create_utility_meters": "Creëer utiliteit meters",
+                    "device": "Apparaat",
                     "energy_integration_method": "Energie integratie methode",
                     "gamma_curve": "Gamma curve",
                     "group_energy_entities": "Additionele energie entiteiten",
@@ -242,7 +245,7 @@
                     "max_power": "Max vermogen",
                     "min_power": "Min vermogen",
                     "multiply_factor": "Multiplicatie factor",
-                    "multiply_facto_standby": "Multiplicatie factor standby",
+                    "multiply_factor_standby": "Multiplicatie factor standby",
                     "name": "Naam",
                     "on_time": "Tijd aan per dag",
                     "playbooks": "Playbooks",
@@ -264,6 +267,7 @@
                     "autostart": "Start een bepaald playbook direct nadat HA is opgestart. bv. 'program1'",
                     "calculation_enabled_condition": "De geconfigureerde vermogen calculatie strategie wordt alleen uitgevoerd indien dit template evalueert naar 1, anders zal de energiesensor 0 tonen",
                     "calibrate": "Kalibratiewaarde op iedere regel. Voorbeeld\n\n1: 20",
+                    "device": "Voeg de entiteiten toe aan een bestaand HA apparaat",
                     "group_energy_entities": "Additionele energie entiteiten (kWh)",
                     "group_member_sensors": "Powercalc sensoren die je wil toevoegen aan de groep",
                     "group_power_entities": "Additionele vermogen entiteiten (W)",
@@ -323,7 +327,7 @@
                     "name": "Waarde"
                 }
             },
-            "name": "Calibrate utility meter"
+            "name": "GUI configuratie wijzigen"
         },
         "increase_daily_energy": {
             "description": "Verhoog de sensor.",
