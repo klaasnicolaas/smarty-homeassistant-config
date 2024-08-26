@@ -64,10 +64,29 @@
 					"getwholeyear": "Data voor het gehele jaar?",
 					"sensors": "Sensoren"
 				}
+			},
+			"reconfigure": {
+				"title": "Afvalinfo",
+				"description": "Update bestaande locatie",
+				"data": {
+					"location": "Gemeente",
+					"postcode": "Postcode",
+					"streetnumber": "Huisnummer",
+					"streetnumbersuffix": "Huisnummer toevoeging",
+					"district": "Buurt",
+					"dateformat": "Datum format",
+					"locale": "Taal (landcode)",
+					"id": "Locatie identificatie",
+					"notrashtext": "Geen afval tekst",
+					"diftarcode": "Diftar code",
+					"getwholeyear": "Data voor het gehele jaar?",
+					"sensors": "Sensoren"
+				}
 			}
 		},
 		"abort": {
-			"already_configured": "[%key:common::config_flow::abort::already_configured_service%]"
+			"already_configured": "[%key:common::config_flow::abort::already_configured_service%]",
+			"reconfigure_successful": "Re-configuratie gelukt"
 		},
 		"error": {
 			"cannot_connect": "[%key:common::config_flow::error::cannot_connect%]"
