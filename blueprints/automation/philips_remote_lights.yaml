@@ -32,13 +32,15 @@ blueprint:
           step: 1.0
           unit_of_measurement: "%"
 
-mode: parallel
+mode: restart
 max_exceeded: silent
 
 trigger:
   - platform: state
     entity_id: !input remote
     attribute: action
+    # Prefent double automation triggers in restart mode
+    not_to: ""
 
 action:
   - variables:
