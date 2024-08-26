@@ -1,4 +1,5 @@
-"""Spook - Not your homie."""
+"""Spook - Your homie."""
+
 from __future__ import annotations
 
 from homeassistant.const import EVENT_COMPONENT_LOADED

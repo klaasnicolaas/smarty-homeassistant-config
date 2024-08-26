@@ -1,15 +1,14 @@
-"""Spook - Not your homie."""
+"""Spook - Your homie."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
 from homeassistant.components.lovelace import DOMAIN
-from homeassistant.components.lovelace.const import (
-    EVENT_LOVELACE_UPDATED,
-    ConfigNotFound,
-)
+from homeassistant.components.lovelace.const import ConfigNotFound
 from homeassistant.const import (
     EVENT_COMPONENT_LOADED,
+    EVENT_LOVELACE_UPDATED,
 )
 from homeassistant.core import callback
 from homeassistant.helpers import entity_registry as er
@@ -96,12 +95,31 @@ class SpookRepair(AbstractSpookRepair):
         entities = set()
         if isinstance(config, dict) and (views := config.get("views")):
             for view in views:
-                if badges := view.get("badges"):
-                    for badge in badges:
-                        entities.update(self.__async_extract_entities_from_badge(badge))
-                if cards := view.get("cards"):
-                    for card in cards:
-                        entities.update(self.__async_extract_entities_from_card(card))
+                entities.update(self.__async_extract_entities_from_view(view))
+        return entities
+
+    @callback
+    def __async_extract_entities_from_view(self, config: dict[Any]) -> set[str]:
+        """Extract entities from a view config."""
+        entities = set()
+        if badges := config.get("badges"):
+            for badge in badges:
+                entities.update(self.__async_extract_entities_from_badge(badge))
+        if cards := config.get("cards"):
+            for card in cards:
+                entities.update(self.__async_extract_entities_from_card(card))
+        if sections := config.get("sections"):
+            for section in sections:
+                entities.update(self.__async_extract_entities_from_section(section))
+        return entities
+
+    @callback
+    def __async_extract_entities_from_section(self, config: dict[Any]) -> set[str]:
+        """Extract entities from a section config."""
+        entities = set()
+        if cards := config.get("cards"):
+            for card in cards:
+                entities.update(self.__async_extract_entities_from_card(card))
         return entities
 
     @callback
