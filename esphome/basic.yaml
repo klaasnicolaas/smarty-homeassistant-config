@@ -24,4 +24,5 @@ web_server:
 logger:
 
 ota:
-  safe_mode: true
+  - platform: esphome
+    safe_mode: true
