@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
+import random
+import time
 
 import homeassistant.helpers.config_validation as cv
+import homeassistant.helpers.entity_registry as er
 import voluptuous as vol
 from awesomeversion.awesomeversion import AwesomeVersion
 from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
@@ -13,7 +17,6 @@ from homeassistant.components.utility_meter.const import METER_TYPES
 from homeassistant.config_entries import ConfigEntry, ConfigEntryState
 from homeassistant.const import (
     CONF_DOMAIN,
-    CONF_ENTITIES,
     CONF_SCAN_INTERVAL,
     EVENT_HOMEASSISTANT_STARTED,
     Platform,
@@ -26,9 +29,11 @@ from homeassistant.helpers.typing import ConfigType
 from .common import validate_name_pattern
 from .const import (
     CONF_CREATE_DOMAIN_GROUPS,
+    CONF_CREATE_ENERGY_SENSOR,
     CONF_CREATE_ENERGY_SENSORS,
     CONF_CREATE_UTILITY_METERS,
     CONF_DISABLE_EXTENDED_ATTRIBUTES,
+    CONF_DISABLE_LIBRARY_DOWNLOAD,
     CONF_ENABLE_AUTODISCOVERY,
     CONF_ENERGY_INTEGRATION_METHOD,
     CONF_ENERGY_SENSOR_CATEGORY,
@@ -40,6 +45,7 @@ from .const import (
     CONF_FORCE_UPDATE_FREQUENCY,
     CONF_IGNORE_UNAVAILABLE_STATE,
     CONF_INCLUDE,
+    CONF_INCLUDE_NON_POWERCALC_SENSORS,
     CONF_POWER,
     CONF_POWER_SENSOR_CATEGORY,
     CONF_POWER_SENSOR_FRIENDLY_NAMING,
@@ -54,7 +60,6 @@ from .const import (
     CONF_UTILITY_METER_TYPES,
     DATA_CALCULATOR_FACTORY,
     DATA_CONFIGURED_ENTITIES,
-    DATA_DISCOVERED_ENTITIES,
     DATA_DISCOVERY_MANAGER,
     DATA_DOMAIN_ENTITIES,
     DATA_STANDBY_POWER_SENSORS,
@@ -80,7 +85,7 @@ from .const import (
 )
 from .discovery import DiscoveryManager
 from .sensor import SENSOR_CONFIG
-from .sensors.group import (
+from .sensors.group.config_entry_utils import (
     get_entries_having_subgroup,
     remove_group_from_power_sensor_entry,
     remove_power_sensor_from_associated_groups,
@@ -129,6 +134,10 @@ CONFIG_SCHEMA = vol.Schema(
                         CONF_DISABLE_EXTENDED_ATTRIBUTES,
                         default=False,
                     ): cv.boolean,
+                    vol.Optional(
+                        CONF_DISABLE_LIBRARY_DOWNLOAD,
+                        default=False,
+                    ): cv.boolean,
                     vol.Optional(CONF_ENABLE_AUTODISCOVERY, default=True): cv.boolean,
                     vol.Optional(CONF_CREATE_ENERGY_SENSORS, default=True): cv.boolean,
                     vol.Optional(CONF_CREATE_UTILITY_METERS, default=False): cv.boolean,
@@ -170,6 +179,7 @@ CONFIG_SCHEMA = vol.Schema(
                         cv.ensure_list,
                         [SENSOR_CONFIG],
                     ),
+                    vol.Optional(CONF_INCLUDE_NON_POWERCALC_SENSORS): cv.boolean,
                 },
             ),
         ),
@@ -209,6 +219,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         CONF_ENABLE_AUTODISCOVERY: True,
         CONF_UTILITY_METER_OFFSET: DEFAULT_OFFSET,
         CONF_UTILITY_METER_TYPES: DEFAULT_UTILITY_METER_TYPES,
+        CONF_INCLUDE_NON_POWERCALC_SENSORS: True,
     }
 
     discovery_manager = DiscoveryManager(hass, config)
@@ -218,7 +229,6 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         DOMAIN_CONFIG: domain_config,
         DATA_CONFIGURED_ENTITIES: {},
         DATA_DOMAIN_ENTITIES: {},
-        DATA_DISCOVERED_ENTITIES: {},
         DATA_USED_UNIQUE_IDS: [],
         DATA_STANDBY_POWER_SENSORS: {},
     }
@@ -232,6 +242,11 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
     setup_domain_groups(hass, domain_config)
     setup_standby_group(hass, domain_config)
+
+    try:
+        await repair_none_config_entries_issue(hass)
+    except Exception as e:  # noqa: BLE001  # pragma: no cover
+        _LOGGER.error("problem while cleaning up None entities", exc_info=e)  # pragma: no cover
 
     return True
 
@@ -273,37 +288,20 @@ def setup_domain_groups(hass: HomeAssistant, global_config: ConfigType) -> None:
     if not domain_groups:
         return
 
-    async def _create_domain_groups(event: None) -> None:
-        """Create group sensors aggregating all power sensors from given domains."""
-        _LOGGER.debug("Setting up domain based group sensors..")
-        for domain in domain_groups:
-            if domain not in hass.data[DOMAIN].get(DATA_DOMAIN_ENTITIES):
-                _LOGGER.error(
-                    "Cannot setup group for domain %s, no entities found",
-                    domain,
-                )
-                continue
-
-            domain_entities = hass.data[DOMAIN].get(DATA_DOMAIN_ENTITIES)[domain]
-
-            hass.async_create_task(
-                async_load_platform(
-                    hass,
-                    SENSOR_DOMAIN,
-                    DOMAIN,
-                    {
-                        DISCOVERY_TYPE: PowercalcDiscoveryType.DOMAIN_GROUP,
-                        CONF_ENTITIES: domain_entities,
-                        CONF_DOMAIN: domain,
-                    },
-                    global_config,
-                ),
-            )
-
-    hass.bus.async_listen_once(
-        EVENT_HOMEASSISTANT_STARTED,
-        _create_domain_groups,
-    )
+    _LOGGER.debug("Setting up domain based group sensors..")
+    for domain in domain_groups:
+        hass.async_create_task(
+            async_load_platform(
+                hass,
+                SENSOR_DOMAIN,
+                DOMAIN,
+                {
+                    DISCOVERY_TYPE: PowercalcDiscoveryType.DOMAIN_GROUP,
+                    CONF_DOMAIN: domain,
+                },
+                global_config,
+            ),
+        )
 
 
 async def setup_yaml_sensors(
@@ -312,21 +310,50 @@ async def setup_yaml_sensors(
     domain_config: ConfigType,
 ) -> None:
     sensors: list = domain_config.get(CONF_SENSORS, [])
-    sorted_sensors = sorted(
-        sensors,
-        key=lambda item: 1 if CONF_INCLUDE in item else 0,
-    )
-    for sensor_config in sorted_sensors:
+    primary_sensors = []
+    secondary_sensors = []
+
+    for sensor_config in sensors:
         sensor_config.update({DISCOVERY_TYPE: PowercalcDiscoveryType.USER_YAML})
-        hass.async_create_task(
-            async_load_platform(
-                hass,
-                Platform.SENSOR,
-                DOMAIN,
-                sensor_config,
-                config,
+
+        if CONF_INCLUDE in sensor_config:
+            secondary_sensors.append(sensor_config)
+        else:
+            primary_sensors.append(sensor_config)
+
+    async def _load_secondary_sensors(_: None) -> None:
+        """Load secondary sensors after primary sensors."""
+        await asyncio.gather(
+            *(
+                hass.async_create_task(
+                    async_load_platform(
+                        hass,
+                        Platform.SENSOR,
+                        DOMAIN,
+                        sensor_config,
+                        config,
+                    ),
+                )
+                for sensor_config in secondary_sensors
             ),
         )
+
+    hass.bus.async_listen_once(EVENT_HOMEASSISTANT_STARTED, _load_secondary_sensors)
+
+    await asyncio.gather(
+        *(
+            hass.async_create_task(
+                async_load_platform(
+                    hass,
+                    Platform.SENSOR,
+                    DOMAIN,
+                    sensor_config,
+                    config,
+                ),
+            )
+            for sensor_config in primary_sensors
+        ),
+    )
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -356,7 +383,8 @@ async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> 
     if unload_ok:
         used_unique_ids: list[str] = hass.data[DOMAIN][DATA_USED_UNIQUE_IDS]
         try:
-            used_unique_ids.remove(config_entry.unique_id)
+            if config_entry.unique_id:
+                used_unique_ids.remove(config_entry.unique_id)
         except ValueError:
             return True
 
@@ -386,16 +414,35 @@ async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) ->
     version = config_entry.version
     if version == 1:
         data = {**config_entry.data}
-        if (
-            CONF_FIXED in data
-            and CONF_POWER in data[CONF_FIXED]
-            and CONF_POWER_TEMPLATE in data[CONF_FIXED]
-        ):
+        if CONF_FIXED in data and CONF_POWER in data[CONF_FIXED] and CONF_POWER_TEMPLATE in data[CONF_FIXED]:
             data[CONF_FIXED].pop(CONF_POWER, None)
-        config_entry.version = 2
-        hass.config_entries.async_update_entry(config_entry, data=data)
+        hass.config_entries.async_update_entry(config_entry, data=data, version=2)
+
+    if version == 2:
+        data = {**config_entry.data}
+        if data.get(CONF_SENSOR_TYPE) and CONF_CREATE_ENERGY_SENSOR not in data:
+            data[CONF_CREATE_ENERGY_SENSOR] = True
+        hass.config_entries.async_update_entry(config_entry, data=data, version=3)
 
     return True
+
+
+async def repair_none_config_entries_issue(hass: HomeAssistant) -> None:
+    """Repair issue with config entries having None as data."""
+    entity_registry = er.async_get(hass)
+    entries = [entry for entry in hass.config_entries.async_entries(DOMAIN) if entry.title == "None"]
+    for entry in entries:
+        _LOGGER.debug("Removing entry %s with None data", entry.entry_id)
+        entities = entity_registry.entities.get_entries_for_config_entry_id(entry.entry_id)
+        for entity in entities:
+            entity_registry.async_remove(entity.entity_id)
+        try:
+            unique_id = f"{int(time.time() * 1000)}_{random.randint(1000, 9999)}"
+            object.__setattr__(entry, "unique_id", unique_id)
+            hass.config_entries._entries._index_entry(entry)  # noqa
+            await hass.config_entries.async_remove(entry.entry_id)
+        except Exception as e:  # noqa: BLE001  # pragma: no cover
+            _LOGGER.error("problem while cleaning up None entities", exc_info=e)  # pragma: no cover
 
 
 def _notify_message(
