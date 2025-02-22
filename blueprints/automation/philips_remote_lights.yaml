@@ -6,14 +6,14 @@ blueprint:
   domain: automation
   input:
     remote:
-      name: Philips Hue dimmer action sensor
+      name: Philips Hue dimmer action
       description: >
-        This must be an "action" sensor provided by zigbee2mqtt. For example "sensors.living_dimmer_action"
+        This must be an "action" event provided by zigbee2mqtt. For example "event.living_dimmer_action"
       selector:
         entity:
           filter:
             - integration: mqtt
-              domain: sensor
+              domain: event
     light:
       name: Light
       description: The light(s group) you want to control
@@ -38,25 +38,30 @@ max_exceeded: silent
 trigger:
   - platform: state
     entity_id: !input remote
-    attribute: action
-    # Prefent double automation triggers in restart mode
-    not_to: ""
+    not_from:
+      - unavailable
+      - unknown
 
 action:
   - variables:
-      command: "{{ trigger.to_state.state }}"
+      event: "{{ trigger.to_state.attributes.event_type | default('unknown', true) }}"
+      button: "{{ trigger.to_state.attributes.button | default('unknown') }}"
       step: !input step
       negative_step: "{{ -1 * (step | int) }}"
 
   - choose:
       # ---------------------------- TURN ON OR OFF ---------------------------- #
-      - conditions: "{{ command == 'on-press' }}"
+      - conditions:
+          - condition: template
+            value_template: "{{ event == 'press' and button == 'on' }}"
         sequence:
           - service: light.turn_on
             target: !input light
             data:
               transition: 1
-      - conditions: "{{ command == 'off-press' }}"
+      - conditions:
+          - condition: template
+            value_template: "{{ event == 'press' and button == 'off' }}"
         sequence:
           - service: light.turn_off
             target: !input light
@@ -90,14 +95,18 @@ action:
       #               brightness_step_pct: -10
       #               transition: 0.5
       #           - delay: '1'
-      - conditions: "{{ command == 'up-press' }}"
+      - conditions:
+          - condition: template
+            value_template: "{{ event == 'press' and button == 'up' }}"
         sequence:
           - service: light.turn_on
             target: !input light
             data:
               brightness_step_pct: "{{ step }}"
               transition: 0.5
-      - conditions: "{{ command == 'down-press' }}"
+      - conditions:
+          - condition: template
+            value_template: "{{ event == 'press' and button == 'down' }}"
         sequence:
           - service: light.turn_on
             target: !input light
