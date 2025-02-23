@@ -38,8 +38,7 @@ esphome/.*/
 .Trash*
 
 # Ignore vendored stuff
-custom_components/hacs
-www/community
+custom_components
 
 # Specific keeps
 !.gitkeep
