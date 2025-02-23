@@ -12,13 +12,13 @@ blueprint:
   domain: automation
   input:
     remote:
-      name: IKEA 4 button remote action sensor
+      name: IKEA 4 button remote action
       description: >
-        This must be an "action" sensor provided by zigbee2mqtt. For example "sensors.living_dimmer_action"
+        This must be an "action" event entity provided by zigbee2mqtt. For example "event.living_dimmer_action"
       selector:
         entity:
           integration: mqtt
-          domain: sensor
+          domain: event
     light:
       name: Light
       description: The light(s group) you want to control
@@ -55,16 +55,16 @@ variables:
 trigger:
   - platform: state
     entity_id: !input remote
-    attribute: action
-    # Prefent double automation triggers in restart mode
-    not_to: ""
+    not_from:
+      - unavailable
+      - unknown
 
 action:
   - variables:
-      command: "{{ trigger.to_state.state }}"
+      event: "{{ trigger.to_state.attributes.event_type | default('unknown', true) }}"
   - choose:
       # ---------------------------- TURN ON OR OFF ---------------------------- #
-      - conditions: "{{ command == 'on' }}"
+      - conditions: "{{ event == 'on' }}"
         sequence:
           - choose:
               - conditions: "{{ force_brightness }}"
@@ -78,60 +78,58 @@ action:
               - service: light.turn_on
                 target: !input light
                 data:
-                  transition: 0.5
-      - conditions: "{{ command == 'off' }}"
+                  transition: 1
+      - conditions: "{{ event == 'off' }}"
         sequence:
           - service: light.turn_off
             target: !input light
             data:
-              transition: 0.5
+              transition: 1
       # ------------------- INCREASE OR DECREASE BRIGHTNESS -------------------- #
       # High - Click and hold
-      - conditions: "{{ command == 'brightness_move_up' }}"
+      - conditions: "{{ event == 'brightness_move_up' }}"
         sequence:
           - repeat:
               until:
                 - condition: state
                   entity_id: !input remote
                   state: brightness_stop
-                  attribute: action
               sequence:
                 - service: light.turn_on
                   data:
                     brightness_step_pct: 10
                     transition: 0.5
                   target: !input light
-                - delay: 0.2
+                - delay: 0.5
       # Low - Click and hold
-      - conditions: "{{ command == 'brightness_move_down' }}"
+      - conditions: "{{ event == 'brightness_move_down' }}"
         sequence:
           - repeat:
               until:
                 - condition: state
                   entity_id: !input remote
                   state: brightness_stop
-                  attribute: action
               sequence:
                 - service: light.turn_on
                   data:
                     brightness_step_pct: -10
                     transition: 0.5
                   target: !input light
-                - delay: 0.2
+                - delay: 0.5
       # # ------------------------ MAX OR MIN BRIGHTNESS ------------------------ #
       # Lowest
-      - conditions: "{{ command == 'arrow_left_click' }}"
+      - conditions: "{{ event == 'arrow_left_click' }}"
         sequence:
           - service: light.turn_on
             target: !input light
             data:
               brightness_pct: 10
-              transition: 0.5
+              transition: 1
       # Highest
-      - conditions: "{{ command == 'arrow_right_click' }}"
+      - conditions: "{{ event == 'arrow_right_click' }}"
         sequence:
           - service: light.turn_on
             target: !input light
             data:
               brightness_pct: 100
-              transition: 0.5
+              transition: 1

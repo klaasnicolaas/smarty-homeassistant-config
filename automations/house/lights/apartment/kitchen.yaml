@@ -8,8 +8,8 @@
   id: 41cee8a5-a1d3-4682-b921-dfbe3e982e60
 
   use_blueprint:
-    path: ikea_round_remote.yaml
+    path: ikea_styrbar_remote.yaml
     input:
-      remote: sensor.keuken_remote_action
+      remote: event.appartement_keuken_remote_action
       light:
-        entity_id: light.apartment_kitchen
+        entity_id: light.kitchen_apartment
