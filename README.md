@@ -60,7 +60,7 @@ If you have a specific question about my configuration send me a Private message
 
 MIT License
 
-Copyright (c) 2022-2023 Klaas Schoute
+Copyright (c) 2022-2025 Klaas Schoute
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -83,7 +83,7 @@ SOFTWARE.
 <!-- Shields -->
 [homeassistantci-shield]: https://github.com/klaasnicolaas/smarty-homeassistant-config/actions/workflows/home_assistant.yaml/badge.svg
 [last-commit-shield]: https://img.shields.io/github/last-commit/klaasnicolaas/smarty-homeassistant-config.svg?color=blue&style=plasticr
-[maintenance-shield]: https://img.shields.io/maintenance/yes/2023.svg
+[maintenance-shield]: https://img.shields.io/maintenance/yes/2025.svg
 [commits-shield]: https://img.shields.io/github/commit-activity/y/klaasnicolaas/smarty-homeassistant-config.svg
 [stars-shield]: https://img.shields.io/github/stars/klaasnicolaas/smarty-homeassistant-config.svg
 [paypal-shield]: https://img.shields.io/badge/BuyMeAFanta-Paypal-orange.svg
