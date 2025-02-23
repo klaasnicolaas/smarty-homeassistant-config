@@ -11,6 +11,6 @@
   use_blueprint:
     path: garage_door_remote.yaml
     input:
-      remote: sensor.garage_remote_action
+      remote: event.garage_remote_action
       cover:
         entity_id: cover.garagedeur
