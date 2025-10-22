@@ -14,5 +14,4 @@ views:
   - !include ./views/energy_devices.yaml
   - !include ./views/all_automations.yaml
   - !include ./views/security.yaml
-  - !include ./views/unifi.yaml
   - !include ./views/system.yaml
