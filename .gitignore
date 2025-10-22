@@ -1,44 +1,63 @@
-# Generic ignores
-*.old
-*.log
-*.log.*
-*.db
-*.db-shm
-*.db-wal
-*.pyc
-._*
-__pycache__
+# Example .gitignore file for your config dir.
+# A * ensures that everything will be ignored.
+# *
 
-# Directory (contents) ignores
-.cloud
+# You can whitelist files/folders with !, these will not be ignored.
+#!*.yaml
+!.gitignore
+!*.md
+!LICENSE
+
+# Ignore public stuff
+www/*
+!www/floorplan
+#
+
+# Ignore Folders
+.vscode
 .storage
-deps
+.cloud
+.google.token
 tts
+deps
+glances
+zones
+__pycache__
+icloud
+bash
+security
+image
 zigbee2mqtt
 automations/security
-www/*
 
-# Specific file ignores
+# Ignore Extensions
+*.db
+*.old
+*.log
+*.conf
+*.HA_VERSION
+*.db-shm
+*.db-wal
+*.csv
+*.log.*
+*.lock
+
+# Ensure these YAML files are ignored, otherwise your secret data/credentials will leak.
 ip_bans.yaml
-alarm_control_panel.yaml
-known_devices.yaml
 secrets.yaml
 security.yaml
-.HA_VERSION
-spook_inverse
+known_devices.yaml
+alarm_control_panel.yaml
 
 # Build-in blueprints ignores
 blueprints/*/homeassistant
 
-# ESPHome ignores
-esphome/.*/
-
-# Ignore files created by IDE's
-.vscode
-.Trash*
-
 # Ignore vendored stuff
 custom_components
+
+# ESPHome ignores
+esphome/.*/
+trash
 
 # Specific keeps
 !.gitkeep
